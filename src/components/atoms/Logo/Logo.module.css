@@ -1,0 +1,21 @@
+.logo {
+  display: block;
+}
+
+.lg {
+  width: min(70%, 420px);
+  object-fit: contain;
+}
+
+.md {
+  width: 160px;
+  object-fit: contain;
+}
+
+.sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-bg);
+}

@@ -1,0 +1,21 @@
+.section {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 1 1 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.accentBg {
+  background: var(--color-accent);
+}
+
+.plainBg {
+  background: var(--color-bg);
+}

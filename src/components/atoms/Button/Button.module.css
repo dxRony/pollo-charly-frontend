@@ -1,0 +1,46 @@
+.button {
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.md {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+}
+
+.sm {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.accent {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.accent:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+}
+
+.primary {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
