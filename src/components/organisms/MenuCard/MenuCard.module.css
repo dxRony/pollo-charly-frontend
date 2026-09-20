@@ -1,0 +1,28 @@
+.card {
+  width: min(100%, 460px);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: var(--color-surface);
+}
+
+.titleBar {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  font-size: 1.3rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem;
+}

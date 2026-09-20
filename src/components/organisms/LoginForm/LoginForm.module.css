@@ -1,0 +1,45 @@
+.card {
+  width: min(100%, 380px);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: var(--color-surface);
+}
+
+.titleBar {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  font-size: 1.1rem;
+}
+
+.body {
+  padding: 1.75rem 1.5rem;
+  text-align: center;
+}
+
+.body :global(button) {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.formError {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.forgot {
+  margin-top: 0.9rem;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.forgot a {
+  color: var(--color-text-muted);
+}
