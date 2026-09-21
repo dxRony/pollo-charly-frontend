@@ -1,0 +1,26 @@
+.form {
+  text-align: left;
+}
+
+.preview {
+  display: block;
+  max-width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin: -0.5rem 0 1.1rem;
+}
+
+.formError {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}

@@ -1,0 +1,1 @@
+export { DishesFilterBar } from './DishesFilterBar'
