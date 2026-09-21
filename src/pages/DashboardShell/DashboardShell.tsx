@@ -9,6 +9,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Menú del día', icon: '📅', to: '/dashboard/daily-menu' },
   { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
   { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
+  { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
   { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
   { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
   { label: 'Reportes', icon: '📊' },

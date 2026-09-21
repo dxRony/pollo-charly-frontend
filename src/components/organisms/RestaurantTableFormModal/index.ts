@@ -1,0 +1,1 @@
+export { RestaurantTableFormModal } from './RestaurantTableFormModal'
