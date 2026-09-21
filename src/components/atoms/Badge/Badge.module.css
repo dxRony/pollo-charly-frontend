@@ -16,3 +16,8 @@
   background: #e5e7eb;
   color: var(--color-text-muted);
 }
+
+.warning {
+  background: #fef3c7;
+  color: #b45309;
+}
