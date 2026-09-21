@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth'
 
 const ADMIN_TABS: DashboardTab[] = [
   { label: 'Usuarios', to: '/dashboard/users' },
-  { label: 'Platillos' },
+  { label: 'Platillos', to: '/dashboard/dishes' },
   { label: 'Complementos', to: '/dashboard/complements' },
   { label: 'Insumos', to: '/dashboard/supplies' },
   { label: 'Proveedores' },
