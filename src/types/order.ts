@@ -109,6 +109,26 @@ export interface ModifyOrderPayload {
   add_items?: CreateOrderItemPayload[]
 }
 
+export interface KitchenOrders {
+  data: Order[]
+  total: number
+}
+
+export type KitchenOrderStatusTarget = 'en_preparacion' | 'lista'
+
+export interface UpdateOrderStatusPayload {
+  status: KitchenOrderStatusTarget
+}
+
+export interface ComandaEventPayload {
+  order: Order
+  message?: string
+  order_id?: number
+  code?: string
+  new_status?: string
+  previous_status?: string
+}
+
 export const ORDER_TYPE_OPTIONS: { value: OrderTypeAlias; label: string }[] = [
   { value: 'en_mesa', label: 'En mesa' },
   { value: 'para_llevar', label: 'Para llevar' },

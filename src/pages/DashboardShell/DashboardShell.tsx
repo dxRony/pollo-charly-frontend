@@ -11,6 +11,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
   { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
   { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
+  { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
   { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
   { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
   { label: 'Reportes', icon: '📊' },
@@ -18,16 +19,12 @@ const ADMIN_TABS: DashboardTab[] = [
 
 const MESERO_TABS: DashboardTab[] = [{ label: 'Comandas', icon: '🧾', to: '/dashboard/orders' }]
 
-const PLACEHOLDER_TABS: DashboardTab[] = [
-  { label: 'Tab1', hasSubmenu: false },
-  { label: 'Tab2', hasSubmenu: false },
-  { label: 'Tab3', hasSubmenu: false },
-]
+const COCINERO_TABS: DashboardTab[] = [{ label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' }]
 
 const TABS_BY_ROLE: Record<string, DashboardTab[]> = {
   Administrador: ADMIN_TABS,
   'Mesero/Cajero': MESERO_TABS,
-  Cocinero: PLACEHOLDER_TABS,
+  Cocinero: COCINERO_TABS,
 }
 
 export function DashboardShell() {
@@ -44,7 +41,7 @@ export function DashboardShell() {
   }
 
   const roleName = user.role?.name ?? 'Usuario'
-  const tabs = TABS_BY_ROLE[roleName] ?? PLACEHOLDER_TABS
+  const tabs = TABS_BY_ROLE[roleName] ?? []
 
   return (
     <DashboardLayout tabs={tabs} onProfile={() => navigate('/dashboard/profile')} onLogout={handleLogout}>

@@ -2,10 +2,12 @@ import { apiFetch } from './api'
 import type {
   CancelOrderPayload,
   CreateOrderPayload,
+  KitchenOrders,
   ModifyOrderPayload,
   OrderFilters,
   OrderMutationResponse,
   PaginatedOrders,
+  UpdateOrderStatusPayload,
 } from '@/types/order'
 
 function buildQueryString(filters: OrderFilters): string {
@@ -55,6 +57,20 @@ export function cancelOrder(
 export function modifyOrder(id: number, payload: ModifyOrderPayload): Promise<OrderMutationResponse> {
   return apiFetch<OrderMutationResponse>(`/orders/${id}`, {
     method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function getKitchenOrders(): Promise<KitchenOrders> {
+  return apiFetch<KitchenOrders>('/kitchen/orders')
+}
+
+export function updateOrderStatus(
+  id: number,
+  payload: UpdateOrderStatusPayload,
+): Promise<OrderMutationResponse> {
+  return apiFetch<OrderMutationResponse>(`/orders/${id}/status`, {
+    method: 'PATCH',
     body: JSON.stringify(payload),
   })
 }
