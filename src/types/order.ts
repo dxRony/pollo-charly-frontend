@@ -99,6 +99,10 @@ export interface OrderMutationResponse {
   order: Order
 }
 
+export interface CancelOrderPayload {
+  cancellation_reason?: string
+}
+
 export const ORDER_TYPE_OPTIONS: { value: OrderTypeAlias; label: string }[] = [
   { value: 'en_mesa', label: 'En mesa' },
   { value: 'para_llevar', label: 'Para llevar' },

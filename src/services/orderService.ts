@@ -1,5 +1,11 @@
 import { apiFetch } from './api'
-import type { CreateOrderPayload, OrderFilters, OrderMutationResponse, PaginatedOrders } from '@/types/order'
+import type {
+  CancelOrderPayload,
+  CreateOrderPayload,
+  OrderFilters,
+  OrderMutationResponse,
+  PaginatedOrders,
+} from '@/types/order'
 
 function buildQueryString(filters: OrderFilters): string {
   const params = new URLSearchParams()
@@ -30,6 +36,16 @@ export function getOrders(filters: OrderFilters = {}): Promise<PaginatedOrders> 
 
 export function createOrder(payload: CreateOrderPayload): Promise<OrderMutationResponse> {
   return apiFetch<OrderMutationResponse>('/orders', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function cancelOrder(
+  id: number,
+  payload: CancelOrderPayload = {},
+): Promise<OrderMutationResponse> {
+  return apiFetch<OrderMutationResponse>(`/orders/${id}/cancel`, {
     method: 'POST',
     body: JSON.stringify(payload),
   })
