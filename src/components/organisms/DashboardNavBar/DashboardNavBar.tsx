@@ -7,6 +7,7 @@ export interface DashboardTab {
   label: string
   icon?: string
   hasSubmenu?: boolean
+  to?: string
 }
 
 interface DashboardNavBarProps {
@@ -25,6 +26,7 @@ export function DashboardNavBar({ tabs, onLogout }: DashboardNavBarProps) {
             label={tab.label}
             icon={tab.icon}
             hasSubmenu={tab.hasSubmenu}
+            to={tab.to}
           />
         ))}
       </div>

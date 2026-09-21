@@ -10,6 +10,21 @@
   font-size: 0.95rem;
   color: var(--color-text);
   cursor: default;
+  text-decoration: none;
+}
+
+a.tab {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+a.tab:hover {
+  background: var(--color-accent-dark);
+}
+
+a.tab.active {
+  background: var(--color-text);
+  color: var(--color-accent);
 }
 
 .icon {

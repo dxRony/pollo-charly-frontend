@@ -5,7 +5,9 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
-import { DashboardPage } from '@/pages/DashboardPage'
+import { DashboardShell } from '@/pages/DashboardShell'
+import { DashboardHomePage } from '@/pages/DashboardHomePage'
+import { UsersPage } from '@/pages/UsersPage'
 
 function App() {
   return (
@@ -20,10 +22,13 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <DashboardPage />
+                <DashboardShell />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<DashboardHomePage />} />
+            <Route path="users" element={<UsersPage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
