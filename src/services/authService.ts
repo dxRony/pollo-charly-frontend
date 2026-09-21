@@ -1,5 +1,12 @@
 import { apiFetch, clearToken, setToken } from './api'
-import type { LoginResponse, User } from '@/types/auth'
+import type {
+  LoginResponse,
+  MessageResponse,
+  TwoFactorStatusResponse,
+  TwoFactorToggleResponse,
+  User,
+  VerifyTwoFactorResponse,
+} from '@/types/auth'
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
   const response = await apiFetch<LoginResponse>('/login', {
@@ -7,9 +14,41 @@ export async function login(email: string, password: string): Promise<LoginRespo
     body: JSON.stringify({ email, password }),
   })
 
+  if (!response.two_factor_required) {
+    setToken(response.token)
+  }
+
+  return response
+}
+
+export async function verifyTwoFactor(email: string, code: string): Promise<VerifyTwoFactorResponse> {
+  const response = await apiFetch<VerifyTwoFactorResponse>('/2fa/verify', {
+    method: 'POST',
+    body: JSON.stringify({ email, code }),
+  })
+
   setToken(response.token)
 
   return response
+}
+
+export function resendTwoFactorCode(email: string): Promise<MessageResponse> {
+  return apiFetch<MessageResponse>('/2fa/resend', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  })
+}
+
+export function getTwoFactorStatus(): Promise<TwoFactorStatusResponse> {
+  return apiFetch<TwoFactorStatusResponse>('/2fa/status')
+}
+
+export function enableTwoFactor(): Promise<TwoFactorToggleResponse> {
+  return apiFetch<TwoFactorToggleResponse>('/2fa/enable', { method: 'POST' })
+}
+
+export function disableTwoFactor(): Promise<TwoFactorToggleResponse> {
+  return apiFetch<TwoFactorToggleResponse>('/2fa/disable', { method: 'POST' })
 }
 
 export async function logout(): Promise<void> {
