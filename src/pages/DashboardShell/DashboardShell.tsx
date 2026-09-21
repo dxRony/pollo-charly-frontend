@@ -1,12 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { DashboardLayout } from '@/components/templates/DashboardLayout'
 import type { DashboardTab } from '@/components/organisms/DashboardNavBar'
-import { TwoFactorSettings } from '@/components/organisms/TwoFactorSettings'
 import { useAuth } from '@/hooks/useAuth'
-import styles from './DashboardPage.module.css'
 
 const ADMIN_TABS: DashboardTab[] = [
-  { label: 'Usuarios' },
+  { label: 'Usuarios', to: '/dashboard/users' },
   { label: 'Platillos' },
   { label: 'Insumos' },
   { label: 'Proveedores' },
@@ -25,7 +23,7 @@ const TABS_BY_ROLE: Record<string, DashboardTab[]> = {
   Cocinero: PLACEHOLDER_TABS,
 }
 
-export function DashboardPage() {
+export function DashboardShell() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
 
@@ -43,12 +41,7 @@ export function DashboardPage() {
 
   return (
     <DashboardLayout tabs={tabs} onLogout={handleLogout}>
-      <h1 className={styles.welcome}>
-        Bienvenido {roleName} {user.name}
-      </h1>
-      <div className={styles.accountSection}>
-        <TwoFactorSettings />
-      </div>
+      <Outlet />
     </DashboardLayout>
   )
 }
