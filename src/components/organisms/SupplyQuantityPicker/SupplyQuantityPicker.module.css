@@ -1,0 +1,25 @@
+.picker {
+  margin-bottom: 1.1rem;
+  text-align: left;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.supplySelect {
+  flex: 2 1 auto;
+}
+
+.quantityInput {
+  flex: 1 1 100px;
+}

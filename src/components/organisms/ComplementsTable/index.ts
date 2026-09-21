@@ -1,0 +1,1 @@
+export { ComplementsTable } from './ComplementsTable'
