@@ -10,10 +10,13 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
   { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
   { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
+  { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
   { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
   { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
   { label: 'Reportes', icon: '📊' },
 ]
+
+const MESERO_TABS: DashboardTab[] = [{ label: 'Comandas', icon: '🧾', to: '/dashboard/orders' }]
 
 const PLACEHOLDER_TABS: DashboardTab[] = [
   { label: 'Tab1', hasSubmenu: false },
@@ -23,7 +26,7 @@ const PLACEHOLDER_TABS: DashboardTab[] = [
 
 const TABS_BY_ROLE: Record<string, DashboardTab[]> = {
   Administrador: ADMIN_TABS,
-  'Mesero/Cajero': PLACEHOLDER_TABS,
+  'Mesero/Cajero': MESERO_TABS,
   Cocinero: PLACEHOLDER_TABS,
 }
 

@@ -1,14 +1,31 @@
 const API_URL = import.meta.env.VITE_API_URL
 const TOKEN_STORAGE_KEY = 'pollo_charly_token'
 
+export interface InsufficientSupplyDetail {
+  supply_id: number
+  name: string
+  required: number
+  available: number
+  current_stock: number
+  reserved_stock: number
+  unit: string
+}
+
 export class ApiError extends Error {
   status: number
   errors?: Record<string, string[]>
+  insufficientSupplies?: InsufficientSupplyDetail[]
 
-  constructor(message: string, status: number, errors?: Record<string, string[]>) {
+  constructor(
+    message: string,
+    status: number,
+    errors?: Record<string, string[]>,
+    insufficientSupplies?: InsufficientSupplyDetail[],
+  ) {
     super(message)
     this.status = status
     this.errors = errors
+    this.insufficientSupplies = insufficientSupplies
   }
 }
 
@@ -50,7 +67,15 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
         ? (body.errors as Record<string, string[]>)
         : undefined
 
-    throw new ApiError(message, response.status, errors)
+    const insufficientSupplies =
+      body &&
+      typeof body === 'object' &&
+      'insufficient_supplies' in body &&
+      Array.isArray(body.insufficient_supplies)
+        ? (body.insufficient_supplies as InsufficientSupplyDetail[])
+        : undefined
+
+    throw new ApiError(message, response.status, errors, insufficientSupplies)
   }
 
   return body as T

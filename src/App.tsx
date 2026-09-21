@@ -16,6 +16,7 @@ import { InventoryMovementsPage } from '@/pages/InventoryMovementsPage'
 import { SupplyAlertsPage } from '@/pages/SupplyAlertsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { RestaurantTablesPage } from '@/pages/RestaurantTablesPage'
+import { OrdersPage } from '@/pages/OrdersPage'
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route path="daily-menu" element={<DailyMenuPage />} />
             <Route path="supplies" element={<SuppliesPage />} />
             <Route path="restaurant-tables" element={<RestaurantTablesPage />} />
+            <Route path="orders" element={<OrdersPage />} />
             <Route path="inventory-movements" element={<InventoryMovementsPage />} />
             <Route path="supply-alerts" element={<SupplyAlertsPage />} />
             <Route path="complements" element={<ComplementsPage />} />
