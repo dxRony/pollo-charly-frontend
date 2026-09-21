@@ -3,11 +3,12 @@ import { Button } from '@/components/atoms/Button'
 import { OrdersFilterBar } from '@/components/organisms/OrdersFilterBar'
 import { OrdersTable } from '@/components/organisms/OrdersTable'
 import { OrderFormModal } from '@/components/organisms/OrderFormModal'
+import { CancelOrderModal } from '@/components/organisms/CancelOrderModal'
 import { useOrders } from '@/hooks/useOrders'
 import { useActiveDishes } from '@/hooks/useActiveDishes'
 import { useAvailableTables } from '@/hooks/useAvailableTables'
 import * as orderService from '@/services/orderService'
-import type { CreateOrderPayload } from '@/types/order'
+import type { CancelOrderPayload, CreateOrderPayload, Order } from '@/types/order'
 import styles from './OrdersPage.module.css'
 
 export function OrdersPage() {
@@ -15,10 +16,20 @@ export function OrdersPage() {
   const { dishes } = useActiveDishes()
   const { tables, refetch: refetchTables } = useAvailableTables()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [cancelingOrder, setCancelingOrder] = useState<Order | null>(null)
 
   async function handleFormSubmit(payload: CreateOrderPayload) {
     await orderService.createOrder(payload)
     setIsModalOpen(false)
+    await Promise.all([refetch(), refetchTables()])
+  }
+
+  async function handleCancelConfirm(payload: CancelOrderPayload) {
+    if (!cancelingOrder) {
+      return
+    }
+    await orderService.cancelOrder(cancelingOrder.id, payload)
+    setCancelingOrder(null)
     await Promise.all([refetch(), refetchTables()])
   }
 
@@ -41,7 +52,7 @@ export function OrdersPage() {
       {isLoading ? (
         <p className={styles.loading}>Cargando comandas...</p>
       ) : (
-        <OrdersTable orders={orders} />
+        <OrdersTable orders={orders} onCancel={setCancelingOrder} />
       )}
 
       {pagination && pagination.lastPage > 1 && (
@@ -74,6 +85,14 @@ export function OrdersPage() {
           availableTables={tables}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleFormSubmit}
+        />
+      )}
+
+      {cancelingOrder && (
+        <CancelOrderModal
+          order={cancelingOrder}
+          onClose={() => setCancelingOrder(null)}
+          onConfirm={handleCancelConfirm}
         />
       )}
     </div>

@@ -1,9 +1,11 @@
 import { Badge } from '@/components/atoms/Badge'
+import { Button } from '@/components/atoms/Button'
 import { ORDER_STATUS_LABELS, ORDER_TYPE_OPTIONS, type Order } from '@/types/order'
 import styles from './OrdersTable.module.css'
 
 interface OrdersTableProps {
   orders: Order[]
+  onCancel: (order: Order) => void
 }
 
 function statusTone(statusName: string): 'success' | 'neutral' | 'warning' {
@@ -27,7 +29,7 @@ function formatItems(order: Order): string {
   return order.items.map((item) => `${item.quantity}x ${item.dish?.name ?? '—'}`).join(', ')
 }
 
-export function OrdersTable({ orders }: OrdersTableProps) {
+export function OrdersTable({ orders, onCancel }: OrdersTableProps) {
   if (orders.length === 0) {
     return <p className={styles.empty}>No se encontraron comandas con los filtros seleccionados.</p>
   }
@@ -45,6 +47,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
             <th>Total</th>
             <th>Estado</th>
             <th>Fecha</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +65,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 </Badge>
               </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
+              <td>
+                {order.order_status === 'pendiente' && (
+                  <Button type="button" size="sm" onClick={() => onCancel(order)}>
+                    Cancelar
+                  </Button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>

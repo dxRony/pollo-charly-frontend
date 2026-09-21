@@ -1,0 +1,23 @@
+.form {
+  text-align: left;
+}
+
+.warning {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1.1rem;
+}
+
+.formError {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
