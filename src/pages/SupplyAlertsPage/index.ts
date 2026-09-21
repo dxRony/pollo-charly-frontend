@@ -1,0 +1,1 @@
+export { SupplyAlertsPage } from './SupplyAlertsPage'

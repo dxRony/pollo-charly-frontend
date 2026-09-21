@@ -10,6 +10,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Complementos', to: '/dashboard/complements' },
   { label: 'Insumos', to: '/dashboard/supplies' },
   { label: 'Movimientos', to: '/dashboard/inventory-movements' },
+  { label: 'Alertas', to: '/dashboard/supply-alerts' },
   { label: 'Reportes', icon: '📖' },
 ]
 
