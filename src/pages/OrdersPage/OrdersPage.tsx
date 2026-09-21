@@ -4,11 +4,12 @@ import { OrdersFilterBar } from '@/components/organisms/OrdersFilterBar'
 import { OrdersTable } from '@/components/organisms/OrdersTable'
 import { OrderFormModal } from '@/components/organisms/OrderFormModal'
 import { CancelOrderModal } from '@/components/organisms/CancelOrderModal'
+import { ModifyOrderModal } from '@/components/organisms/ModifyOrderModal'
 import { useOrders } from '@/hooks/useOrders'
 import { useActiveDishes } from '@/hooks/useActiveDishes'
 import { useAvailableTables } from '@/hooks/useAvailableTables'
 import * as orderService from '@/services/orderService'
-import type { CancelOrderPayload, CreateOrderPayload, Order } from '@/types/order'
+import type { CancelOrderPayload, CreateOrderPayload, ModifyOrderPayload, Order } from '@/types/order'
 import styles from './OrdersPage.module.css'
 
 export function OrdersPage() {
@@ -17,6 +18,7 @@ export function OrdersPage() {
   const { tables, refetch: refetchTables } = useAvailableTables()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [cancelingOrder, setCancelingOrder] = useState<Order | null>(null)
+  const [modifyingOrder, setModifyingOrder] = useState<Order | null>(null)
 
   async function handleFormSubmit(payload: CreateOrderPayload) {
     await orderService.createOrder(payload)
@@ -31,6 +33,15 @@ export function OrdersPage() {
     await orderService.cancelOrder(cancelingOrder.id, payload)
     setCancelingOrder(null)
     await Promise.all([refetch(), refetchTables()])
+  }
+
+  async function handleModifySubmit(payload: ModifyOrderPayload) {
+    if (!modifyingOrder) {
+      return
+    }
+    await orderService.modifyOrder(modifyingOrder.id, payload)
+    setModifyingOrder(null)
+    await refetch()
   }
 
   return (
@@ -52,7 +63,7 @@ export function OrdersPage() {
       {isLoading ? (
         <p className={styles.loading}>Cargando comandas...</p>
       ) : (
-        <OrdersTable orders={orders} onCancel={setCancelingOrder} />
+        <OrdersTable orders={orders} onCancel={setCancelingOrder} onModify={setModifyingOrder} />
       )}
 
       {pagination && pagination.lastPage > 1 && (
@@ -93,6 +104,15 @@ export function OrdersPage() {
           order={cancelingOrder}
           onClose={() => setCancelingOrder(null)}
           onConfirm={handleCancelConfirm}
+        />
+      )}
+
+      {modifyingOrder && (
+        <ModifyOrderModal
+          order={modifyingOrder}
+          availableDishes={dishes}
+          onClose={() => setModifyingOrder(null)}
+          onSubmit={handleModifySubmit}
         />
       )}
     </div>

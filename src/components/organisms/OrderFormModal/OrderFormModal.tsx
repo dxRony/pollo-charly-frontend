@@ -4,7 +4,7 @@ import { SelectField } from '@/components/molecules/SelectField'
 import { TextareaField } from '@/components/molecules/TextareaField'
 import { Modal } from '@/components/molecules/Modal'
 import { OrderItemsEditor, type OrderItemFormLine } from '@/components/organisms/OrderItemsEditor'
-import { ApiError } from '@/services/api'
+import { formatOrderError } from '@/utils/formatOrderError'
 import { ORDER_TYPE_OPTIONS } from '@/types/order'
 import type {
   CreateOrderItemComplementPayload,
@@ -21,22 +21,6 @@ interface OrderFormModalProps {
   availableTables: RestaurantTable[]
   onClose: () => void
   onSubmit: (payload: CreateOrderPayload) => Promise<void>
-}
-
-function formatOrderError(err: unknown): string {
-  if (err instanceof ApiError && err.insufficientSupplies && err.insufficientSupplies.length > 0) {
-    const details = err.insufficientSupplies
-      .map(
-        (supply) =>
-          `${supply.name}: requiere ${supply.required} ${supply.unit}, disponible ${supply.available} ${supply.unit}`,
-      )
-      .join(' · ')
-    return `${err.message} ${details}`
-  }
-  if (err instanceof ApiError && err.errors) {
-    return Object.values(err.errors).flat().join(' ')
-  }
-  return err instanceof Error ? err.message : 'No se pudo registrar la comanda.'
 }
 
 export function OrderFormModal({
@@ -119,7 +103,7 @@ export function OrderFormModal({
     try {
       await onSubmit(payload)
     } catch (err) {
-      setError(formatOrderError(err))
+      setError(formatOrderError(err, 'No se pudo registrar la comanda.'))
     } finally {
       setIsSubmitting(false)
     }

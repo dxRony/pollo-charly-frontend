@@ -6,6 +6,7 @@ import styles from './OrdersTable.module.css'
 interface OrdersTableProps {
   orders: Order[]
   onCancel: (order: Order) => void
+  onModify: (order: Order) => void
 }
 
 function statusTone(statusName: string): 'success' | 'neutral' | 'warning' {
@@ -29,7 +30,11 @@ function formatItems(order: Order): string {
   return order.items.map((item) => `${item.quantity}x ${item.dish?.name ?? '—'}`).join(', ')
 }
 
-export function OrdersTable({ orders, onCancel }: OrdersTableProps) {
+function canModify(order: Order): boolean {
+  return order.order_status !== 'cancelada' && order.order_status !== 'entregada'
+}
+
+export function OrdersTable({ orders, onCancel, onModify }: OrdersTableProps) {
   if (orders.length === 0) {
     return <p className={styles.empty}>No se encontraron comandas con los filtros seleccionados.</p>
   }
@@ -65,7 +70,12 @@ export function OrdersTable({ orders, onCancel }: OrdersTableProps) {
                 </Badge>
               </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
-              <td>
+              <td className={styles.actions}>
+                {canModify(order) && (
+                  <Button type="button" size="sm" onClick={() => onModify(order)}>
+                    Modificar
+                  </Button>
+                )}
                 {order.order_status === 'pendiente' && (
                   <Button type="button" size="sm" onClick={() => onCancel(order)}>
                     Cancelar

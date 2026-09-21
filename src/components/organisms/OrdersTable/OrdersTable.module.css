@@ -41,6 +41,13 @@
   color: var(--color-text-muted);
 }
 
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  white-space: normal;
+}
+
 .empty {
   text-align: center;
   padding: 2rem;

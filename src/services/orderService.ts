@@ -2,6 +2,7 @@ import { apiFetch } from './api'
 import type {
   CancelOrderPayload,
   CreateOrderPayload,
+  ModifyOrderPayload,
   OrderFilters,
   OrderMutationResponse,
   PaginatedOrders,
@@ -47,6 +48,13 @@ export function cancelOrder(
 ): Promise<OrderMutationResponse> {
   return apiFetch<OrderMutationResponse>(`/orders/${id}/cancel`, {
     method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function modifyOrder(id: number, payload: ModifyOrderPayload): Promise<OrderMutationResponse> {
+  return apiFetch<OrderMutationResponse>(`/orders/${id}`, {
+    method: 'PUT',
     body: JSON.stringify(payload),
   })
 }
