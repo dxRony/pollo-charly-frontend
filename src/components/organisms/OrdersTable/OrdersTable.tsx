@@ -7,6 +7,7 @@ interface OrdersTableProps {
   orders: Order[]
   onCancel: (order: Order) => void
   onModify: (order: Order) => void
+  onRegisterSale: (order: Order) => void
 }
 
 function statusTone(statusName: string): 'success' | 'neutral' | 'warning' {
@@ -34,7 +35,7 @@ function canModify(order: Order): boolean {
   return order.order_status !== 'cancelada' && order.order_status !== 'entregada'
 }
 
-export function OrdersTable({ orders, onCancel, onModify }: OrdersTableProps) {
+export function OrdersTable({ orders, onCancel, onModify, onRegisterSale }: OrdersTableProps) {
   if (orders.length === 0) {
     return <p className={styles.empty}>No se encontraron comandas con los filtros seleccionados.</p>
   }
@@ -71,6 +72,11 @@ export function OrdersTable({ orders, onCancel, onModify }: OrdersTableProps) {
               </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
               <td className={styles.actions}>
+                {order.order_status === 'lista' && (
+                  <Button type="button" size="sm" variant="primary" onClick={() => onRegisterSale(order)}>
+                    Cobrar
+                  </Button>
+                )}
                 {canModify(order) && (
                   <Button type="button" size="sm" onClick={() => onModify(order)}>
                     Modificar

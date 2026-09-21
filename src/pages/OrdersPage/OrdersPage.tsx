@@ -5,11 +5,14 @@ import { OrdersTable } from '@/components/organisms/OrdersTable'
 import { OrderFormModal } from '@/components/organisms/OrderFormModal'
 import { CancelOrderModal } from '@/components/organisms/CancelOrderModal'
 import { ModifyOrderModal } from '@/components/organisms/ModifyOrderModal'
+import { RegisterSaleModal } from '@/components/organisms/RegisterSaleModal'
 import { useOrders } from '@/hooks/useOrders'
 import { useActiveDishes } from '@/hooks/useActiveDishes'
 import { useAvailableTables } from '@/hooks/useAvailableTables'
 import * as orderService from '@/services/orderService'
+import * as saleService from '@/services/saleService'
 import type { CancelOrderPayload, CreateOrderPayload, ModifyOrderPayload, Order } from '@/types/order'
+import type { RegisterSalePayload } from '@/types/sale'
 import styles from './OrdersPage.module.css'
 
 export function OrdersPage() {
@@ -19,6 +22,7 @@ export function OrdersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [cancelingOrder, setCancelingOrder] = useState<Order | null>(null)
   const [modifyingOrder, setModifyingOrder] = useState<Order | null>(null)
+  const [sellingOrder, setSellingOrder] = useState<Order | null>(null)
 
   async function handleFormSubmit(payload: CreateOrderPayload) {
     await orderService.createOrder(payload)
@@ -44,6 +48,15 @@ export function OrdersPage() {
     await refetch()
   }
 
+  async function handleRegisterSaleSubmit(payload: RegisterSalePayload) {
+    if (!sellingOrder) {
+      return
+    }
+    await saleService.registerSale(sellingOrder.id, payload)
+    setSellingOrder(null)
+    await Promise.all([refetch(), refetchTables()])
+  }
+
   return (
     <div>
       <h1 className={styles.title}>Comandas</h1>
@@ -63,7 +76,12 @@ export function OrdersPage() {
       {isLoading ? (
         <p className={styles.loading}>Cargando comandas...</p>
       ) : (
-        <OrdersTable orders={orders} onCancel={setCancelingOrder} onModify={setModifyingOrder} />
+        <OrdersTable
+          orders={orders}
+          onCancel={setCancelingOrder}
+          onModify={setModifyingOrder}
+          onRegisterSale={setSellingOrder}
+        />
       )}
 
       {pagination && pagination.lastPage > 1 && (
@@ -113,6 +131,14 @@ export function OrdersPage() {
           availableDishes={dishes}
           onClose={() => setModifyingOrder(null)}
           onSubmit={handleModifySubmit}
+        />
+      )}
+
+      {sellingOrder && (
+        <RegisterSaleModal
+          order={sellingOrder}
+          onClose={() => setSellingOrder(null)}
+          onSubmit={handleRegisterSaleSubmit}
         />
       )}
     </div>
