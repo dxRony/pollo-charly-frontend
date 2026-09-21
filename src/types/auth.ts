@@ -45,3 +45,10 @@ export interface TwoFactorToggleResponse {
   message: string
   two_factor_enabled: boolean
 }
+
+export interface ResetPasswordPayload {
+  token: string
+  email: string
+  password: string
+  password_confirmation: string
+}

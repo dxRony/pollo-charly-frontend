@@ -2,6 +2,7 @@ import { apiFetch, clearToken, setToken } from './api'
 import type {
   LoginResponse,
   MessageResponse,
+  ResetPasswordPayload,
   TwoFactorStatusResponse,
   TwoFactorToggleResponse,
   User,
@@ -49,6 +50,20 @@ export function enableTwoFactor(): Promise<TwoFactorToggleResponse> {
 
 export function disableTwoFactor(): Promise<TwoFactorToggleResponse> {
   return apiFetch<TwoFactorToggleResponse>('/2fa/disable', { method: 'POST' })
+}
+
+export function forgotPassword(email: string): Promise<MessageResponse> {
+  return apiFetch<MessageResponse>('/forgot-password', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  })
+}
+
+export function resetPassword(payload: ResetPasswordPayload): Promise<MessageResponse> {
+  return apiFetch<MessageResponse>('/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
 }
 
 export async function logout(): Promise<void> {
