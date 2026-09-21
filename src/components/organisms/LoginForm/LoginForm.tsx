@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/atoms/Button'
 import { FormField } from '@/components/molecules/FormField'
 import styles from './LoginForm.module.css'
@@ -56,7 +57,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
           {isSubmitting ? 'Ingresando...' : 'Iniciar sesion'}
         </Button>
         <p className={styles.forgot}>
-          <a href="#">¿Olvidaste tu contraseña?</a>
+          <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
         </p>
       </form>
     </div>
