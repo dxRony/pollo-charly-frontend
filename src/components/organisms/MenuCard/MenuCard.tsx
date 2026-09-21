@@ -1,11 +1,21 @@
 import { BulletListItem } from '@/components/atoms/BulletListItem'
 import styles from './MenuCard.module.css'
 
-interface MenuCardProps {
-  items: string[]
+export interface MenuCardItem {
+  id: number
+  name: string
+  price?: number
 }
 
-export function MenuCard({ items }: MenuCardProps) {
+interface MenuCardProps {
+  items: MenuCardItem[]
+  emptyMessage?: string
+}
+
+export function MenuCard({
+  items,
+  emptyMessage = 'Aún no hay platillos publicados en el menú del día.',
+}: MenuCardProps) {
   return (
     <div className={styles.card}>
       <div className={styles.titleBar}>
@@ -13,9 +23,20 @@ export function MenuCard({ items }: MenuCardProps) {
         <h2 className={styles.title}>Menú del día:</h2>
       </div>
       <div className={styles.list}>
-        {items.map((item) => (
-          <BulletListItem key={item}>{item}</BulletListItem>
-        ))}
+        {items.length === 0 ? (
+          <p className={styles.empty}>{emptyMessage}</p>
+        ) : (
+          items.map((item) => (
+            <BulletListItem key={item.id}>
+              <span className={styles.itemRow}>
+                <span className={styles.itemName}>{item.name}</span>
+                {item.price !== undefined && (
+                  <span className={styles.itemPrice}>{item.price.toFixed(2)}</span>
+                )}
+              </span>
+            </BulletListItem>
+          ))
+        )}
       </div>
     </div>
   )
