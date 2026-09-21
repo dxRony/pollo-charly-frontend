@@ -1,0 +1,1 @@
+export { KitchenOrderCard } from './KitchenOrderCard'

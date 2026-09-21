@@ -17,6 +17,7 @@ import { SupplyAlertsPage } from '@/pages/SupplyAlertsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { RestaurantTablesPage } from '@/pages/RestaurantTablesPage'
 import { OrdersPage } from '@/pages/OrdersPage'
+import { KitchenPage } from '@/pages/KitchenPage'
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="supplies" element={<SuppliesPage />} />
             <Route path="restaurant-tables" element={<RestaurantTablesPage />} />
             <Route path="orders" element={<OrdersPage />} />
+            <Route path="kitchen" element={<KitchenPage />} />
             <Route path="inventory-movements" element={<InventoryMovementsPage />} />
             <Route path="supply-alerts" element={<SupplyAlertsPage />} />
             <Route path="complements" element={<ComplementsPage />} />
