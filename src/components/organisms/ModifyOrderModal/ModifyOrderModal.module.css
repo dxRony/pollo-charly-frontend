@@ -1,0 +1,50 @@
+.form {
+  text-align: left;
+}
+
+.restriction {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.currentItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
+}
+
+.currentItemRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.currentItemRowDisabled {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.formError {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
