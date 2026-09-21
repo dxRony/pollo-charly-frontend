@@ -12,6 +12,7 @@ import { SuppliesPage } from '@/pages/SuppliesPage'
 import { ComplementsPage } from '@/pages/ComplementsPage'
 import { DishesPage } from '@/pages/DishesPage'
 import { DailyMenuPage } from '@/pages/DailyMenuPage'
+import { InventoryMovementsPage } from '@/pages/InventoryMovementsPage'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="dishes" element={<DishesPage />} />
             <Route path="daily-menu" element={<DailyMenuPage />} />
             <Route path="supplies" element={<SuppliesPage />} />
+            <Route path="inventory-movements" element={<InventoryMovementsPage />} />
             <Route path="complements" element={<ComplementsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
