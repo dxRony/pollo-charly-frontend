@@ -11,6 +11,7 @@ import { UsersPage } from '@/pages/UsersPage'
 import { SuppliesPage } from '@/pages/SuppliesPage'
 import { ComplementsPage } from '@/pages/ComplementsPage'
 import { DishesPage } from '@/pages/DishesPage'
+import { DailyMenuPage } from '@/pages/DailyMenuPage'
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route index element={<DashboardHomePage />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="dishes" element={<DishesPage />} />
+            <Route path="daily-menu" element={<DailyMenuPage />} />
             <Route path="supplies" element={<SuppliesPage />} />
             <Route path="complements" element={<ComplementsPage />} />
           </Route>
