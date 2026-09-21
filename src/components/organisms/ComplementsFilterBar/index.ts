@@ -1,0 +1,1 @@
+export { ComplementsFilterBar } from './ComplementsFilterBar'
