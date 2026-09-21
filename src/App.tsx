@@ -14,6 +14,7 @@ import { DishesPage } from '@/pages/DishesPage'
 import { DailyMenuPage } from '@/pages/DailyMenuPage'
 import { InventoryMovementsPage } from '@/pages/InventoryMovementsPage'
 import { SupplyAlertsPage } from '@/pages/SupplyAlertsPage'
+import { ProfilePage } from '@/pages/ProfilePage'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             }
           >
             <Route index element={<DashboardHomePage />} />
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="dishes" element={<DishesPage />} />
             <Route path="daily-menu" element={<DailyMenuPage />} />

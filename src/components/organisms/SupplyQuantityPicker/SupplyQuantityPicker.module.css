@@ -1,25 +1,45 @@
 .picker {
-  margin-bottom: 1.1rem;
+  margin: 0.25rem 0 1.4rem;
   text-align: left;
 }
 
 .empty {
   color: var(--color-text-muted);
   font-size: 0.85rem;
-  margin: 0 0 0.75rem;
+  margin: 0 0 1rem;
 }
 
 .row {
-  display: flex;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.5rem auto;
+  gap: 0.75rem;
   align-items: center;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.85rem;
 }
 
 .supplySelect {
-  flex: 2 1 auto;
+  min-width: 0;
 }
 
 .quantityInput {
-  flex: 1 1 100px;
+  min-width: 0;
+}
+
+.row :global(button) {
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    gap: 0.65rem;
+  }
+
+  .supplySelect {
+    grid-column: 1 / -1;
+  }
+
+  .row :global(button) {
+    width: 100%;
+  }
 }

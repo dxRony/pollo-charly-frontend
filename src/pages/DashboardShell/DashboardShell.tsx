@@ -4,14 +4,14 @@ import type { DashboardTab } from '@/components/organisms/DashboardNavBar'
 import { useAuth } from '@/hooks/useAuth'
 
 const ADMIN_TABS: DashboardTab[] = [
-  { label: 'Usuarios', to: '/dashboard/users' },
-  { label: 'Platillos', to: '/dashboard/dishes' },
-  { label: 'Menú del día', to: '/dashboard/daily-menu' },
-  { label: 'Complementos', to: '/dashboard/complements' },
-  { label: 'Insumos', to: '/dashboard/supplies' },
-  { label: 'Movimientos', to: '/dashboard/inventory-movements' },
-  { label: 'Alertas', to: '/dashboard/supply-alerts' },
-  { label: 'Reportes', icon: '📖' },
+  { label: 'Usuarios', icon: '👥', to: '/dashboard/users' },
+  { label: 'Platillos', icon: '🍗', to: '/dashboard/dishes' },
+  { label: 'Menú del día', icon: '📅', to: '/dashboard/daily-menu' },
+  { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
+  { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
+  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
+  { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
+  { label: 'Reportes', icon: '📊' },
 ]
 
 const PLACEHOLDER_TABS: DashboardTab[] = [
@@ -43,7 +43,7 @@ export function DashboardShell() {
   const tabs = TABS_BY_ROLE[roleName] ?? PLACEHOLDER_TABS
 
   return (
-    <DashboardLayout tabs={tabs} onLogout={handleLogout}>
+    <DashboardLayout tabs={tabs} onProfile={() => navigate('/dashboard/profile')} onLogout={handleLogout}>
       <Outlet />
     </DashboardLayout>
   )

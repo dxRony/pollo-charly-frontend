@@ -1,4 +1,3 @@
-import { TwoFactorSettings } from '@/components/organisms/TwoFactorSettings'
 import { useAuth } from '@/hooks/useAuth'
 import styles from './DashboardHomePage.module.css'
 
@@ -12,13 +11,8 @@ export function DashboardHomePage() {
   const roleName = user.role?.name ?? 'Usuario'
 
   return (
-    <>
-      <h1 className={styles.welcome}>
-        Bienvenido {roleName} {user.name}
-      </h1>
-      <div className={styles.accountSection}>
-        <TwoFactorSettings />
-      </div>
-    </>
+    <h1 className={styles.welcome}>
+      Bienvenido {roleName} {user.name}
+    </h1>
   )
 }

@@ -5,12 +5,11 @@ import styles from './UsersTable.module.css'
 
 interface UsersTableProps {
   users: User[]
-  currentUserId: number
   onEdit: (user: User) => void
   onToggleStatus: (user: User) => void
 }
 
-export function UsersTable({ users, currentUserId, onEdit, onToggleStatus }: UsersTableProps) {
+export function UsersTable({ users, onEdit, onToggleStatus }: UsersTableProps) {
   if (users.length === 0) {
     return <p className={styles.empty}>No se encontraron usuarios con los filtros seleccionados.</p>
   }
@@ -42,18 +41,7 @@ export function UsersTable({ users, currentUserId, onEdit, onToggleStatus }: Use
                 <Button type="button" size="sm" onClick={() => onEdit(user)}>
                   Editar
                 </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="primary"
-                  onClick={() => onToggleStatus(user)}
-                  disabled={user.id === currentUserId && user.is_active}
-                  title={
-                    user.id === currentUserId && user.is_active
-                      ? 'No puedes desactivar tu propia cuenta'
-                      : undefined
-                  }
-                >
+                <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(user)}>
                   {user.is_active ? 'Desactivar' : 'Activar'}
                 </Button>
               </td>

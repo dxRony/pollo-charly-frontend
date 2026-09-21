@@ -5,6 +5,7 @@ import { InventoryMovementsTable } from '@/components/organisms/InventoryMovemen
 import { InventoryMovementFormModal } from '@/components/organisms/InventoryMovementFormModal'
 import { useInventoryMovements } from '@/hooks/useInventoryMovements'
 import { useActiveSupplies } from '@/hooks/useActiveSupplies'
+import { useAuth } from '@/hooks/useAuth'
 import * as inventoryMovementService from '@/services/inventoryMovementService'
 import { ApiError } from '@/services/api'
 import type { CreateInventoryMovementPayload, InventoryMovement } from '@/types/inventoryMovement'
@@ -14,11 +15,24 @@ export function InventoryMovementsPage() {
   const { movements, pagination, filters, isLoading, error, updateFilters, setPage, refetch } =
     useInventoryMovements()
   const { supplies } = useActiveSupplies()
+  const { user: currentUser } = useAuth()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
 
   async function handleFormSubmit(payload: CreateInventoryMovementPayload) {
-    await inventoryMovementService.createInventoryMovement(payload)
+    const { movement } = await inventoryMovementService.createInventoryMovement(payload)
+
+    // Una administradora no necesita esperar su propia aprobación: los ajustes que
+    // ella misma registra se autoaprueban de inmediato; solo los de cocinero/mesero-cajero
+    // quedan pendientes de revisión.
+    if (payload.type === 'ajuste' && currentUser?.role?.name === 'Administrador') {
+      try {
+        await inventoryMovementService.approveAdjustment(movement.id)
+      } catch (err) {
+        setActionError(extractErrorMessage(err))
+      }
+    }
+
     setIsModalOpen(false)
     await refetch()
   }

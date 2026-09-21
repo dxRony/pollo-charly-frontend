@@ -23,6 +23,8 @@ export function UsersPage() {
     return null
   }
 
+  const otherUsers = users.filter((targetUser) => targetUser.id !== currentUser.id)
+
   async function handleFormSubmit(payload: CreateUserPayload | UpdateUserPayload) {
     if (modalState?.mode === 'edit') {
       await userService.updateUser(modalState.user.id, payload as UpdateUserPayload)
@@ -61,8 +63,7 @@ export function UsersPage() {
         <p className={styles.loading}>Cargando usuarios...</p>
       ) : (
         <UsersTable
-          users={users}
-          currentUserId={currentUser.id}
+          users={otherUsers}
           onEdit={(targetUser) => setModalState({ mode: 'edit', user: targetUser })}
           onToggleStatus={handleToggleStatus}
         />

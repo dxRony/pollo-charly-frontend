@@ -3,6 +3,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.55rem 1.1rem;
+  min-height: 2.65rem;
+  white-space: nowrap;
   background: var(--color-accent);
   border: none;
   border-radius: var(--radius-md);
@@ -31,11 +33,12 @@ a.tab.active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.55rem;
+  height: 1.55rem;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  flex: 0 0 1.55rem;
 }
 
 .arrow {
