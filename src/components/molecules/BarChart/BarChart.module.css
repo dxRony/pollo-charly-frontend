@@ -1,0 +1,45 @@
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 110px 1fr 90px;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+}
+
+.label {
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track {
+  background: var(--color-surface);
+  border-radius: var(--radius-pill);
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  min-width: 4px;
+  background: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.value {
+  font-weight: 600;
+  text-align: right;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+}

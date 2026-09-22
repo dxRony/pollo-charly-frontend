@@ -1,0 +1,56 @@
+.title {
+  margin: 0 0 1rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0.75rem;
+}
+
+.tab {
+  font-family: var(--font-sans);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  border-radius: var(--radius-pill);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.kpiRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.loading {
+  color: var(--color-text-muted);
+}
+
+.error {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+}

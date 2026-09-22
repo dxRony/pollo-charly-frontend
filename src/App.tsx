@@ -18,6 +18,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { RestaurantTablesPage } from '@/pages/RestaurantTablesPage'
 import { OrdersPage } from '@/pages/OrdersPage'
 import { KitchenPage } from '@/pages/KitchenPage'
+import { ReportsPage } from '@/pages/ReportsPage'
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="inventory-movements" element={<InventoryMovementsPage />} />
             <Route path="supply-alerts" element={<SupplyAlertsPage />} />
             <Route path="complements" element={<ComplementsPage />} />
+            <Route path="reports" element={<ReportsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

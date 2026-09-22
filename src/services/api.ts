@@ -41,6 +41,37 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_STORAGE_KEY)
 }
 
+export async function apiDownload(path: string, filename: string): Promise<void> {
+  const token = getToken()
+
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: {
+      Accept: 'application/pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
+
+  if (!response.ok) {
+    const body: unknown = await response.json().catch(() => null)
+    const message =
+      body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
+        ? body.message
+        : `Error ${response.status} al descargar ${path}`
+
+    throw new ApiError(message, response.status)
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken()
 

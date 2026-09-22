@@ -14,7 +14,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
   { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
   { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
-  { label: 'Reportes', icon: '📊' },
+  { label: 'Reportes', icon: '📊', to: '/dashboard/reports' },
 ]
 
 const MESERO_TABS: DashboardTab[] = [{ label: 'Comandas', icon: '🧾', to: '/dashboard/orders' }]
