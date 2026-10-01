@@ -1,0 +1,1 @@
+export { InventoryMovementsTable } from './InventoryMovementsTable'

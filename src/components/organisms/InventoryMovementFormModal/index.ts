@@ -1,0 +1,1 @@
+export { InventoryMovementFormModal } from './InventoryMovementFormModal'

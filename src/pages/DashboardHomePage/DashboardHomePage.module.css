@@ -1,0 +1,5 @@
+.welcome {
+  color: var(--color-primary);
+  text-align: center;
+  font-size: 1.6rem;
+}

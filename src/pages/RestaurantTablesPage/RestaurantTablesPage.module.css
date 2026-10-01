@@ -1,0 +1,17 @@
+.title {
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.error {
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  color: var(--color-text-muted);
+  padding: 2rem;
+  text-align: center;
+}

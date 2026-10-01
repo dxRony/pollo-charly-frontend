@@ -1,0 +1,30 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.search {
+  flex: 2 1 220px;
+}
+
+.filterSelect {
+  flex: 1 1 160px;
+}
+
+.lowStockToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.createButton {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}

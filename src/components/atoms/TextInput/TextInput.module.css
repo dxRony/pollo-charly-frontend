@@ -1,0 +1,18 @@
+.input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-accent);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.input:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.input::placeholder {
+  color: rgba(26, 26, 26, 0.55);
+}

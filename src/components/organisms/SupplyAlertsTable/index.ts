@@ -1,0 +1,1 @@
+export { SupplyAlertsTable } from './SupplyAlertsTable'

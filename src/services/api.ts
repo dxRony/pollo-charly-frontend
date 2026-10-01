@@ -1,0 +1,113 @@
+const API_URL = import.meta.env.VITE_API_URL
+const TOKEN_STORAGE_KEY = 'pollo_charly_token'
+
+export interface InsufficientSupplyDetail {
+  supply_id: number
+  name: string
+  required: number
+  available: number
+  current_stock: number
+  reserved_stock: number
+  unit: string
+}
+
+export class ApiError extends Error {
+  status: number
+  errors?: Record<string, string[]>
+  insufficientSupplies?: InsufficientSupplyDetail[]
+
+  constructor(
+    message: string,
+    status: number,
+    errors?: Record<string, string[]>,
+    insufficientSupplies?: InsufficientSupplyDetail[],
+  ) {
+    super(message)
+    this.status = status
+    this.errors = errors
+    this.insufficientSupplies = insufficientSupplies
+  }
+}
+
+export function getToken(): string | null {
+  return localStorage.getItem(TOKEN_STORAGE_KEY)
+}
+
+export function setToken(token: string): void {
+  localStorage.setItem(TOKEN_STORAGE_KEY, token)
+}
+
+export function clearToken(): void {
+  localStorage.removeItem(TOKEN_STORAGE_KEY)
+}
+
+export async function apiDownload(path: string, filename: string): Promise<void> {
+  const token = getToken()
+
+  const response = await fetch(`${API_URL}${path}`, {
+    headers: {
+      Accept: 'application/pdf, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
+
+  if (!response.ok) {
+    const body: unknown = await response.json().catch(() => null)
+    const message =
+      body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
+        ? body.message
+        : `Error ${response.status} al descargar ${path}`
+
+    throw new ApiError(message, response.status)
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
+export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const token = getToken()
+
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  })
+
+  const body: unknown = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    const message =
+      body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
+        ? body.message
+        : `Error ${response.status} al llamar ${path}`
+
+    const errors =
+      body && typeof body === 'object' && 'errors' in body && typeof body.errors === 'object' && body.errors
+        ? (body.errors as Record<string, string[]>)
+        : undefined
+
+    const insufficientSupplies =
+      body &&
+      typeof body === 'object' &&
+      'insufficient_supplies' in body &&
+      Array.isArray(body.insufficient_supplies)
+        ? (body.insufficient_supplies as InsufficientSupplyDetail[])
+        : undefined
+
+    throw new ApiError(message, response.status, errors, insufficientSupplies)
+  }
+
+  return body as T
+}

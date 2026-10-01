@@ -1,0 +1,57 @@
+.wrapper {
+  width: min(100%, 900px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+.title {
+  grid-column: 1 / -1;
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.infoList {
+  margin: 0 0 1.25rem;
+  text-align: left;
+}
+
+.infoList dt {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+}
+
+.infoList dt:first-child {
+  margin-top: 0;
+}
+
+.infoList dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+}
