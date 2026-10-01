@@ -1,0 +1,58 @@
+name: Publicar frontend
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar-frontend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: us-east-2
+  SITE_URL: https://d1nyq5ujkrljd1.cloudfront.net
+  VITE_REVERB_HOST: d1nyq5ujkrljd1.cloudfront.net
+  VITE_REVERB_APP_KEY: n8z7byubizjyp9uyk5l4
+  FRONTEND_BUCKET: pollo-charly-prod-frontend-537101771923
+  CLOUDFRONT_DISTRIBUTION_ID: E23ZPGIBRO5LWC
+
+jobs:
+  publicar:
+    name: Compilar y publicar en S3 + CloudFront
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Compilar para producción
+        run: ./scripts/build-production.sh
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Identidad de AWS
+        run: aws sts get-caller-identity --query Arn --output text
+
+      - name: Publicar
+        run: ./scripts/publish-frontend.sh
+
+      - name: Verificar que el sitio responde
+        run: curl -fsS -o /dev/null "$SITE_URL/"
