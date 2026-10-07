@@ -9,6 +9,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Menú del día', icon: '📅', to: '/dashboard/daily-menu' },
   { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
   { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
+  { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
   { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
   { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
   { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
@@ -17,7 +18,10 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Reportes', icon: '📊', to: '/dashboard/reports' },
 ]
 
-const MESERO_TABS: DashboardTab[] = [{ label: 'Comandas', icon: '🧾', to: '/dashboard/orders' }]
+const MESERO_TABS: DashboardTab[] = [
+  { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
+  { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
+]
 
 const COCINERO_TABS: DashboardTab[] = [{ label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' }]
 
