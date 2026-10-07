@@ -1,0 +1,1 @@
+export { ForcePasswordChangePage } from './ForcePasswordChangePage'

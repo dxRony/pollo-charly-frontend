@@ -9,6 +9,7 @@ export interface User {
   email: string
   is_active: boolean
   two_factor_enabled: boolean
+  must_change_password: boolean
   role: Role | null
   created_at?: string | null
 }

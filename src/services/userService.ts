@@ -4,6 +4,7 @@ import type {
   CreateUserPayload,
   PaginatedUsers,
   UpdateUserPayload,
+  UserCredentialsResponse,
   UserFilters,
   UserMutationResponse,
 } from '@/types/user'
@@ -39,8 +40,8 @@ export function getRoles(): Promise<Role[]> {
   return apiFetch<Role[]>('/roles')
 }
 
-export function createUser(payload: CreateUserPayload): Promise<UserMutationResponse> {
-  return apiFetch<UserMutationResponse>('/users', {
+export function createUser(payload: CreateUserPayload): Promise<UserCredentialsResponse> {
+  return apiFetch<UserCredentialsResponse>('/users', {
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -58,4 +59,8 @@ export function toggleUserStatus(id: number, isActive: boolean): Promise<UserMut
     method: 'PATCH',
     body: JSON.stringify({ is_active: isActive }),
   })
+}
+
+export function resetUserPassword(id: number): Promise<UserCredentialsResponse> {
+  return apiFetch<UserCredentialsResponse>(`/users/${id}/reset-password`, { method: 'POST' })
 }

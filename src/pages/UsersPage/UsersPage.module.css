@@ -28,3 +28,22 @@
   font-size: 0.9rem;
   color: var(--color-text-muted);
 }
+
+.noticeSuccess,
+.noticeWarning {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.noticeSuccess {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.noticeWarning {
+  background: #fef3c7;
+  color: #92400e;
+}

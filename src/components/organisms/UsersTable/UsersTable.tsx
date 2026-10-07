@@ -7,9 +7,10 @@ interface UsersTableProps {
   users: User[]
   onEdit: (user: User) => void
   onToggleStatus: (user: User) => void
+  onResetPassword: (user: User) => void
 }
 
-export function UsersTable({ users, onEdit, onToggleStatus }: UsersTableProps) {
+export function UsersTable({ users, onEdit, onToggleStatus, onResetPassword }: UsersTableProps) {
   if (users.length === 0) {
     return <p className={styles.empty}>No se encontraron usuarios con los filtros seleccionados.</p>
   }
@@ -40,6 +41,9 @@ export function UsersTable({ users, onEdit, onToggleStatus }: UsersTableProps) {
               <td className={styles.actions}>
                 <Button type="button" size="sm" onClick={() => onEdit(user)}>
                   Editar
+                </Button>
+                <Button type="button" size="sm" onClick={() => onResetPassword(user)}>
+                  Restablecer contraseña
                 </Button>
                 <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(user)}>
                   {user.is_active ? 'Desactivar' : 'Activar'}
