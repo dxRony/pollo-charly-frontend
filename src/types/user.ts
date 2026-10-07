@@ -19,7 +19,6 @@ export interface UserFilters {
 export interface CreateUserPayload {
   name: string
   email: string
-  password: string
   role_id: number
   is_active?: boolean
 }
@@ -27,7 +26,6 @@ export interface CreateUserPayload {
 export interface UpdateUserPayload {
   name: string
   email: string
-  password?: string
   role_id: number
   is_active?: boolean
 }
@@ -35,4 +33,8 @@ export interface UpdateUserPayload {
 export interface UserMutationResponse {
   message: string
   user: User
+}
+
+export interface UserCredentialsResponse extends UserMutationResponse {
+  credentials_sent: boolean
 }

@@ -5,6 +5,7 @@ import { LandingPage } from '@/pages/LandingPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
+import { ForcePasswordChangePage } from '@/pages/ForcePasswordChangePage'
 import { DashboardShell } from '@/pages/DashboardShell'
 import { DashboardHomePage } from '@/pages/DashboardHomePage'
 import { UsersPage } from '@/pages/UsersPage'
@@ -29,6 +30,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/change-password" element={<ForcePasswordChangePage />} />
           <Route
             path="/dashboard"
             element={

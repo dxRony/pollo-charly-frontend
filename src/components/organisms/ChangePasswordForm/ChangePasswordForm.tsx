@@ -5,10 +5,14 @@ import type { ChangePasswordPayload } from '@/types/auth'
 import styles from './ChangePasswordForm.module.css'
 
 interface ChangePasswordFormProps {
+  description?: string
   onSubmit: (payload: ChangePasswordPayload) => Promise<string>
 }
 
-export function ChangePasswordForm({ onSubmit }: ChangePasswordFormProps) {
+export function ChangePasswordForm({
+  description = 'Por seguridad, al cambiarla se cerrarán tus sesiones abiertas en otros dispositivos.',
+  onSubmit,
+}: ChangePasswordFormProps) {
   const [currentPassword, setCurrentPassword] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
@@ -48,9 +52,7 @@ export function ChangePasswordForm({ onSubmit }: ChangePasswordFormProps) {
   return (
     <div className={styles.card}>
       <h2 className={styles.title}>Cambiar contraseña</h2>
-      <p className={styles.description}>
-        Por seguridad, al cambiarla se cerrarán tus sesiones abiertas en otros dispositivos.
-      </p>
+      <p className={styles.description}>{description}</p>
       <form onSubmit={handleSubmit}>
         <PasswordField
           id="current_password"

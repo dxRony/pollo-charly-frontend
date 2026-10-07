@@ -3,21 +3,29 @@ import { Button } from '@/components/atoms/Button'
 import { UsersFilterBar } from '@/components/organisms/UsersFilterBar'
 import { UsersTable } from '@/components/organisms/UsersTable'
 import { UserFormModal } from '@/components/organisms/UserFormModal'
+import { ResetUserPasswordModal } from '@/components/organisms/ResetUserPasswordModal'
 import { useUsers } from '@/hooks/useUsers'
 import { useRoles } from '@/hooks/useRoles'
 import { useAuth } from '@/hooks/useAuth'
 import * as userService from '@/services/userService'
 import type { User } from '@/types/auth'
-import type { CreateUserPayload, UpdateUserPayload } from '@/types/user'
+import type { CreateUserPayload, UpdateUserPayload, UserCredentialsResponse } from '@/types/user'
 import styles from './UsersPage.module.css'
 
 type ModalState = { mode: 'create' } | { mode: 'edit'; user: User } | null
+
+interface Notice {
+  tone: 'success' | 'warning'
+  message: string
+}
 
 export function UsersPage() {
   const { user: currentUser } = useAuth()
   const { users, pagination, filters, isLoading, error, updateFilters, setPage, refetch } = useUsers()
   const { roles } = useRoles()
   const [modalState, setModalState] = useState<ModalState>(null)
+  const [resetTarget, setResetTarget] = useState<User | null>(null)
+  const [notice, setNotice] = useState<Notice | null>(null)
 
   if (!currentUser) {
     return null
@@ -25,13 +33,28 @@ export function UsersPage() {
 
   const otherUsers = users.filter((targetUser) => targetUser.id !== currentUser.id)
 
+  function showCredentialsNotice(response: UserCredentialsResponse) {
+    setNotice({ tone: response.credentials_sent ? 'success' : 'warning', message: response.message })
+  }
+
   async function handleFormSubmit(payload: CreateUserPayload | UpdateUserPayload) {
     if (modalState?.mode === 'edit') {
       await userService.updateUser(modalState.user.id, payload as UpdateUserPayload)
+      setNotice(null)
     } else {
-      await userService.createUser(payload as CreateUserPayload)
+      showCredentialsNotice(await userService.createUser(payload as CreateUserPayload))
     }
     setModalState(null)
+    await refetch()
+  }
+
+  async function handleResetPassword() {
+    if (!resetTarget) {
+      return
+    }
+
+    showCredentialsNotice(await userService.resetUserPassword(resetTarget.id))
+    setResetTarget(null)
     await refetch()
   }
 
@@ -57,6 +80,12 @@ export function UsersPage() {
         onCreateClick={() => setModalState({ mode: 'create' })}
       />
 
+      {notice && (
+        <p className={notice.tone === 'success' ? styles.noticeSuccess : styles.noticeWarning} role="status">
+          {notice.message}
+        </p>
+      )}
+
       {error && <p className={styles.error}>{error}</p>}
 
       {isLoading ? (
@@ -66,6 +95,7 @@ export function UsersPage() {
           users={otherUsers}
           onEdit={(targetUser) => setModalState({ mode: 'edit', user: targetUser })}
           onToggleStatus={handleToggleStatus}
+          onResetPassword={setResetTarget}
         />
       )}
 
@@ -100,6 +130,14 @@ export function UsersPage() {
           initialUser={modalState.mode === 'edit' ? modalState.user : undefined}
           onClose={() => setModalState(null)}
           onSubmit={handleFormSubmit}
+        />
+      )}
+
+      {resetTarget && (
+        <ResetUserPasswordModal
+          user={resetTarget}
+          onClose={() => setResetTarget(null)}
+          onConfirm={handleResetPassword}
         />
       )}
     </div>
