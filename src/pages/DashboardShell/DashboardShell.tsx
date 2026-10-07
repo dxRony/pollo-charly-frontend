@@ -10,6 +10,7 @@ const ADMIN_TABS: DashboardTab[] = [
   { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
   { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
   { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
+  { label: 'Compras', icon: '🛒', to: '/dashboard/purchases' },
   { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
   { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
   { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },

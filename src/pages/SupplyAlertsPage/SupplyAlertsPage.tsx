@@ -23,11 +23,16 @@ export function SupplyAlertsPage() {
     await refetch()
   }
 
+  const [feedback, setFeedback] = useState<string | null>(null)
+
   async function handleAttend(alert: SupplyAlert) {
     setActionError(null)
+    setFeedback(null)
     try {
       await supplyAlertService.attendSupplyAlert(alert.id)
+      setFeedback('Alerta atendida con éxito. Se ha generado la solicitud de compra correspondiente.')
       await refetch()
+      setTimeout(() => setFeedback(null), 6000)
     } catch (err) {
       if (err instanceof ApiError && err.errors) {
         setActionError(Object.values(err.errors).flat().join(' '))
@@ -54,6 +59,7 @@ export function SupplyAlertsPage() {
         onCreateClick={() => setIsModalOpen(true)}
       />
 
+      {feedback && <p style={{ backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', padding: '0.75rem 1rem', borderRadius: '0.375rem', fontSize: '0.875rem' }}>{feedback}</p>}
       {error && <p className={styles.error}>{error}</p>}
       {actionError && <p className={styles.error}>{actionError}</p>}
 
