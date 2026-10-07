@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/atoms/Button'
-import { FormField } from '@/components/molecules/FormField'
+import { PasswordField } from '@/components/molecules/PasswordField'
 import styles from './ResetPasswordForm.module.css'
 
 interface ResetPasswordFormProps {
@@ -76,20 +76,18 @@ export function ResetPasswordForm({ token, email, onSubmit }: ResetPasswordFormP
         <p className={styles.hint}>
           Elige una nueva contraseña para <strong>{email}</strong>.
         </p>
-        <FormField
+        <PasswordField
           id="password"
           label="Nueva contraseña"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
         />
-        <FormField
+        <PasswordField
           id="password_confirmation"
           label="Confirmar contraseña"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           value={passwordConfirmation}
