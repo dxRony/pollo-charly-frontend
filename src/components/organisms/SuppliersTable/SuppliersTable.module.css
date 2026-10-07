@@ -1,0 +1,124 @@
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.inactiveRow {
+  opacity: 0.7;
+  background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.04));
+}
+
+.companyName {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.address {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contactName {
+  font-weight: 500;
+}
+
+.contactDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.daysList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.dayBadge {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background-color: var(--color-surface-muted, #e2e8f0);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.suppliesCount {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.historyCounts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+}
+
+.incidentAlert {
+  color: var(--color-danger, #ef4444);
+  font-weight: 600;
+}
+
+.successText {
+  color: var(--color-success, #22c55e);
+}
+
+.muted {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.empty {
+  text-align: center;
+  padding: 2.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}

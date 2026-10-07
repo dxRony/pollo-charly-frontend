@@ -1,0 +1,178 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.leadText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.alertDanger {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.incidentSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radioOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  background-color: var(--color-surface);
+  transition: all 0.2s ease;
+}
+
+.radioOption input {
+  margin-top: 0.25rem;
+}
+
+.radioTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.radioDesc {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+  line-height: 1.3;
+}
+
+.radioOptionSuccess {
+  border-color: var(--color-success, #22c55e);
+  background-color: #f0fdf4;
+}
+
+.radioOptionDanger {
+  border-color: var(--color-danger, #ef4444);
+  background-color: #fef2f2;
+}
+
+.incidentDetailsBox {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.select,
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: var(--color-surface);
+}
+
+.select:focus,
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--color-danger, #ef4444);
+  font-weight: 500;
+}
+
+.itemsSection {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-surface-muted, #f8fafc);
+}
+
+.itemsTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.itemsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.itemName {
+  font-weight: 500;
+}
+
+.itemQtyWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.itemInput {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.itemUnit {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  min-width: 30px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.75rem;
+}
