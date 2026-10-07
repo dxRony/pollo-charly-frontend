@@ -53,7 +53,7 @@ export interface CreateDishPayload {
   category_id: number
   description?: string
   price: number
-  image_url?: string
+  image_url?: string | null
   is_active?: boolean
   recipes?: DishRecipeInput[]
   complements?: number[]
@@ -64,7 +64,7 @@ export interface UpdateDishPayload {
   category_id: number
   description?: string
   price: number
-  image_url?: string
+  image_url?: string | null
   is_active?: boolean
   recipes?: DishRecipeInput[]
   complements?: number[]
@@ -73,4 +73,26 @@ export interface UpdateDishPayload {
 export interface DishMutationResponse {
   message: string
   dish: Dish
+}
+
+export interface DishImageUploadResponse {
+  message: string
+  image_url: string
+}
+
+export interface PublicDishComplement {
+  id: number
+  name: string
+  extra_price: number
+}
+
+/** Platillo tal como lo expone la landing page: sin receta ni datos internos. */
+export interface PublicDish {
+  id: number
+  name: string
+  category: { id: number; name: string } | null
+  description: string | null
+  price: number
+  image_url: string | null
+  complements: PublicDishComplement[]
 }
