@@ -1,0 +1,1 @@
+export { DishImageModal } from './DishImageModal'

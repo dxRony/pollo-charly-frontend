@@ -1,1 +1,0 @@
-export { MenuCard } from './MenuCard'

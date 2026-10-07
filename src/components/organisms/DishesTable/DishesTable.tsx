@@ -1,5 +1,6 @@
 import { Badge } from '@/components/atoms/Badge'
 import { Button } from '@/components/atoms/Button'
+import { PhotoFrame } from '@/components/atoms/PhotoFrame'
 import type { Dish } from '@/types/dish'
 import styles from './DishesTable.module.css'
 
@@ -7,6 +8,7 @@ interface DishesTableProps {
   dishes: Dish[]
   onEdit: (dish: Dish) => void
   onToggleStatus: (dish: Dish) => void
+  onViewImage: (dish: Dish) => void
 }
 
 function formatRecipe(dish: Dish): string {
@@ -27,7 +29,7 @@ function formatComplements(dish: Dish): string {
   return dish.complements.map((complement) => complement.name).join(', ')
 }
 
-export function DishesTable({ dishes, onEdit, onToggleStatus }: DishesTableProps) {
+export function DishesTable({ dishes, onEdit, onToggleStatus, onViewImage }: DishesTableProps) {
   if (dishes.length === 0) {
     return <p className={styles.empty}>No se encontraron platillos con los filtros seleccionados.</p>
   }
@@ -37,6 +39,7 @@ export function DishesTable({ dishes, onEdit, onToggleStatus }: DishesTableProps
       <table className={styles.table}>
         <thead>
           <tr>
+            <th>Imagen</th>
             <th>Nombre</th>
             <th>Categoría</th>
             <th>Precio</th>
@@ -49,6 +52,21 @@ export function DishesTable({ dishes, onEdit, onToggleStatus }: DishesTableProps
         <tbody>
           {dishes.map((dish) => (
             <tr key={dish.id}>
+              <td>
+                {dish.image_url ? (
+                  <button
+                    type="button"
+                    className={styles.thumbButton}
+                    aria-label={`Ver imagen de ${dish.name}`}
+                    title="Ver imagen"
+                    onClick={() => onViewImage(dish)}
+                  >
+                    <PhotoFrame src={dish.image_url} alt={dish.name} ratio="square" className={styles.thumb} />
+                  </button>
+                ) : (
+                  <PhotoFrame src={null} alt={dish.name} ratio="square" className={styles.thumb} />
+                )}
+              </td>
               <td>{dish.name}</td>
               <td>{dish.category?.name ?? '—'}</td>
               <td>{dish.price.toFixed(2)}</td>

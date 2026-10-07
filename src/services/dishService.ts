@@ -2,6 +2,7 @@ import { apiFetch } from './api'
 import type {
   CreateDishPayload,
   DishFilters,
+  DishImageUploadResponse,
   DishMutationResponse,
   PaginatedDishes,
   UpdateDishPayload,
@@ -52,5 +53,19 @@ export function toggleDishStatus(id: number, isActive: boolean): Promise<DishMut
   return apiFetch<DishMutationResponse>(`/dishes/${id}/status`, {
     method: 'PATCH',
     body: JSON.stringify({ is_active: isActive }),
+  })
+}
+
+export function uploadDishImage(image: File): Promise<DishImageUploadResponse> {
+  const body = new FormData()
+  body.append('image', image)
+
+  return apiFetch<DishImageUploadResponse>('/uploads/dish-image', { method: 'POST', body })
+}
+
+export function discardDishImage(imageUrl: string): Promise<void> {
+  return apiFetch<void>('/uploads/dish-image', {
+    method: 'DELETE',
+    body: JSON.stringify({ image_url: imageUrl }),
   })
 }

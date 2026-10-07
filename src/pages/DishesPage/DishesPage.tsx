@@ -3,6 +3,7 @@ import { Button } from '@/components/atoms/Button'
 import { DishesFilterBar } from '@/components/organisms/DishesFilterBar'
 import { DishesTable } from '@/components/organisms/DishesTable'
 import { DishFormModal } from '@/components/organisms/DishFormModal'
+import { DishImageModal } from '@/components/organisms/DishImageModal'
 import { useDishes } from '@/hooks/useDishes'
 import { useCategories } from '@/hooks/useCategories'
 import { useActiveSupplies } from '@/hooks/useActiveSupplies'
@@ -19,7 +20,18 @@ export function DishesPage() {
   const { supplies } = useActiveSupplies()
   const { complements } = useActiveComplements()
   const [modalState, setModalState] = useState<ModalState>(null)
+  const [imageDish, setImageDish] = useState<Dish | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+
+  async function handleUploadImage(image: File): Promise<string> {
+    const response = await dishService.uploadDishImage(image)
+    return response.image_url
+  }
+
+  function handleDiscardImage(imageUrl: string) {
+    // Limpieza de mejor esfuerzo: si falla, el comando de limpieza de huérfanas la recoge después.
+    dishService.discardDishImage(imageUrl).catch(() => undefined)
+  }
 
   async function handleFormSubmit(payload: CreateDishPayload | UpdateDishPayload) {
     if (modalState?.mode === 'edit') {
@@ -68,6 +80,7 @@ export function DishesPage() {
           dishes={dishes}
           onEdit={(dish) => setModalState({ mode: 'edit', dish })}
           onToggleStatus={handleToggleStatus}
+          onViewImage={setImageDish}
         />
       )}
 
@@ -104,6 +117,16 @@ export function DishesPage() {
           initialDish={modalState.mode === 'edit' ? modalState.dish : undefined}
           onClose={() => setModalState(null)}
           onSubmit={handleFormSubmit}
+          onUploadImage={handleUploadImage}
+          onDiscardImage={handleDiscardImage}
+        />
+      )}
+
+      {imageDish?.image_url && (
+        <DishImageModal
+          dishName={imageDish.name}
+          imageUrl={imageDish.image_url}
+          onClose={() => setImageDish(null)}
         />
       )}
     </div>

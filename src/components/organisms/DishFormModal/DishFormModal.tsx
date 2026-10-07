@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { Button } from '@/components/atoms/Button'
 import { FormField } from '@/components/molecules/FormField'
+import { ImageUploadField } from '@/components/molecules/ImageUploadField'
 import { SelectField } from '@/components/molecules/SelectField'
 import { TextareaField } from '@/components/molecules/TextareaField'
 import { Modal } from '@/components/molecules/Modal'
@@ -12,6 +13,9 @@ import type { Complement } from '@/types/complement'
 import type { CreateDishPayload, Dish, DishRecipeInput, UpdateDishPayload } from '@/types/dish'
 import styles from './DishFormModal.module.css'
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024
+
 interface DishFormModalProps {
   mode: 'create' | 'edit'
   categories: Category[]
@@ -20,6 +24,8 @@ interface DishFormModalProps {
   initialDish?: Dish
   onClose: () => void
   onSubmit: (payload: CreateDishPayload | UpdateDishPayload) => Promise<void>
+  onUploadImage: (image: File) => Promise<string>
+  onDiscardImage: (imageUrl: string) => void
 }
 
 export function DishFormModal({
@@ -30,12 +36,19 @@ export function DishFormModal({
   initialDish,
   onClose,
   onSubmit,
+  onUploadImage,
+  onDiscardImage,
 }: DishFormModalProps) {
   const [name, setName] = useState(initialDish?.name ?? '')
   const [categoryId, setCategoryId] = useState<number | ''>(initialDish?.category_id ?? '')
   const [description, setDescription] = useState(initialDish?.description ?? '')
   const [price, setPrice] = useState(initialDish?.price.toString() ?? '')
-  const [imageUrl, setImageUrl] = useState(initialDish?.image_url ?? '')
+  const [imageUrl, setImageUrl] = useState<string | null>(initialDish?.image_url ?? null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [imageError, setImageError] = useState<string | null>(null)
+  // Imagen subida en esta sesión que todavía no se guardó con el platillo: si se reemplaza, se quita
+  // o se cierra el formulario sin guardar, hay que descartarla para no dejar archivos huérfanos.
+  const unsavedUploadRef = useRef<string | null>(null)
   const [recipeLines, setRecipeLines] = useState<SupplyQuantityLine[]>(
     initialDish?.recipes.map((line) => ({
       supply_id: line.supply_id,
@@ -49,6 +62,50 @@ export function DishFormModal({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const title = mode === 'create' ? 'Registrar nuevo platillo' : 'Editar platillo'
+
+  function discardUnsavedUpload() {
+    if (unsavedUploadRef.current) {
+      onDiscardImage(unsavedUploadRef.current)
+      unsavedUploadRef.current = null
+    }
+  }
+
+  function handleClose() {
+    discardUnsavedUpload()
+    onClose()
+  }
+
+  function handleRemoveImage() {
+    discardUnsavedUpload()
+    setImageUrl(null)
+  }
+
+  async function handleSelectImage(file: File) {
+    setImageError(null)
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setImageError('La imagen debe ser un archivo JPG, PNG o WebP.')
+      return
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setImageError('La imagen no puede superar los 2 MB.')
+      return
+    }
+
+    setIsUploadingImage(true)
+
+    try {
+      const uploadedUrl = await onUploadImage(file)
+      discardUnsavedUpload()
+      unsavedUploadRef.current = uploadedUrl
+      setImageUrl(uploadedUrl)
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : 'No se pudo subir la imagen.')
+    } finally {
+      setIsUploadingImage(false)
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -88,7 +145,7 @@ export function DishFormModal({
       category_id: categoryId,
       description: description || undefined,
       price: Number(price),
-      image_url: imageUrl || undefined,
+      image_url: imageUrl,
       recipes,
       complements: complementIds,
     }
@@ -97,6 +154,7 @@ export function DishFormModal({
 
     try {
       await onSubmit(payload)
+      unsavedUploadRef.current = null
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar el platillo.')
     } finally {
@@ -105,7 +163,7 @@ export function DishFormModal({
   }
 
   return (
-    <Modal title={title} onClose={onClose}>
+    <Modal title={title} onClose={handleClose}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <FormField
           id="name"
@@ -148,15 +206,17 @@ export function DishFormModal({
           onChange={(event) => setPrice(event.target.value)}
           required
         />
-        <FormField
-          id="image_url"
-          label="URL de imagen (opcional)"
-          type="text"
-          value={imageUrl}
-          onChange={(event) => setImageUrl(event.target.value)}
-          placeholder="https://..."
+        <ImageUploadField
+          id="dish_image"
+          label="Imagen (opcional)"
+          imageUrl={imageUrl}
+          isUploading={isUploadingImage}
+          accept={ALLOWED_IMAGE_TYPES.join(',')}
+          hint="JPG, PNG o WebP de hasta 2 MB."
+          error={imageError ?? undefined}
+          onSelectFile={handleSelectImage}
+          onRemove={handleRemoveImage}
         />
-        {imageUrl && <img src={imageUrl} alt="Vista previa" className={styles.preview} />}
         <SupplyQuantityPicker
           availableSupplies={availableSupplies}
           lines={recipeLines}
@@ -169,10 +229,10 @@ export function DishFormModal({
         />
         {error && <p className={styles.formError}>{error}</p>}
         <div className={styles.actions}>
-          <Button type="button" onClick={onClose} disabled={isSubmitting}>
+          <Button type="button" onClick={handleClose} disabled={isSubmitting}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
+          <Button type="submit" variant="primary" disabled={isSubmitting || isUploadingImage}>
             {isSubmitting ? 'Guardando...' : 'Guardar'}
           </Button>
         </div>

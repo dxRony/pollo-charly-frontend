@@ -21,6 +21,7 @@
 
 .table td {
   padding: 0.85rem 1rem;
+  vertical-align: middle;
   border-bottom: 1px solid rgba(26, 26, 26, 0.1);
   font-size: 0.9rem;
 }
@@ -47,4 +48,39 @@
   border: 3px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
+}
+
+.thumb {
+  width: 56px;
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.thumbButton {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  cursor: zoom-in;
+  transition: transform 0.15s ease;
+}
+
+.thumbButton:hover {
+  transform: scale(1.06);
+}
+
+.thumbButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbButton {
+    transition: none;
+  }
+
+  .thumbButton:hover {
+    transform: none;
+  }
 }
