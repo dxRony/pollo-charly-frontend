@@ -50,6 +50,10 @@
   font-weight: 600;
 }
 
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 720px) {
   .wrapper {
     grid-template-columns: 1fr;

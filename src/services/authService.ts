@@ -1,5 +1,6 @@
 import { apiFetch, clearToken, setToken } from './api'
 import type {
+  ChangePasswordPayload,
   LoginResponse,
   MessageResponse,
   ResetPasswordPayload,
@@ -62,6 +63,13 @@ export function forgotPassword(email: string): Promise<MessageResponse> {
 export function resetPassword(payload: ResetPasswordPayload): Promise<MessageResponse> {
   return apiFetch<MessageResponse>('/reset-password', {
     method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function changePassword(payload: ChangePasswordPayload): Promise<MessageResponse> {
+  return apiFetch<MessageResponse>('/me/password', {
+    method: 'PUT',
     body: JSON.stringify(payload),
   })
 }
