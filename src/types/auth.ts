@@ -9,6 +9,7 @@ export interface User {
   email: string
   is_active: boolean
   two_factor_enabled: boolean
+  must_change_password: boolean
   role: Role | null
   created_at?: string | null
 }
@@ -49,6 +50,12 @@ export interface TwoFactorToggleResponse {
 export interface ResetPasswordPayload {
   token: string
   email: string
+  password: string
+  password_confirmation: string
+}
+
+export interface ChangePasswordPayload {
+  current_password: string
   password: string
   password_confirmation: string
 }

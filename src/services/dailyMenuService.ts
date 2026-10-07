@@ -1,13 +1,13 @@
 import { apiFetch } from './api'
-import type { Dish } from '@/types/dish'
+import type { Dish, PublicDish } from '@/types/dish'
 
 interface DailyMenuUpdateResponse {
   message: string
   data: Dish[]
 }
 
-export function getDailyMenu(): Promise<Dish[]> {
-  return apiFetch<Dish[]>('/daily-menu')
+export function getDailyMenu(): Promise<PublicDish[]> {
+  return apiFetch<PublicDish[]>('/daily-menu')
 }
 
 export function updateDailyMenu(dishIds: number[]): Promise<DailyMenuUpdateResponse> {

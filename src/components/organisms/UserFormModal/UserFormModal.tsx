@@ -18,7 +18,6 @@ interface UserFormModalProps {
 export function UserFormModal({ mode, roles, initialUser, onClose, onSubmit }: UserFormModalProps) {
   const [name, setName] = useState(initialUser?.name ?? '')
   const [email, setEmail] = useState(initialUser?.email ?? '')
-  const [password, setPassword] = useState('')
   const [roleId, setRoleId] = useState<number | ''>(initialUser?.role?.id ?? '')
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -37,16 +36,8 @@ export function UserFormModal({ mode, roles, initialUser, onClose, onSubmit }: U
     setIsSubmitting(true)
 
     try {
-      if (mode === 'create') {
-        const payload: CreateUserPayload = { name, email, password, role_id: roleId }
-        await onSubmit(payload)
-      } else {
-        const payload: UpdateUserPayload = { name, email, role_id: roleId }
-        if (password) {
-          payload.password = password
-        }
-        await onSubmit(payload)
-      }
+      const payload: CreateUserPayload | UpdateUserPayload = { name, email, role_id: roleId }
+      await onSubmit(payload)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo guardar el usuario.')
     } finally {
@@ -73,16 +64,6 @@ export function UserFormModal({ mode, roles, initialUser, onClose, onSubmit }: U
           onChange={(event) => setEmail(event.target.value)}
           required
         />
-        <FormField
-          id="password"
-          label={mode === 'create' ? 'Contraseña inicial' : 'Nueva contraseña (opcional)'}
-          type="password"
-          minLength={8}
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder={mode === 'edit' ? 'Dejar en blanco para no cambiarla' : undefined}
-          required={mode === 'create'}
-        />
         <SelectField
           id="role_id"
           label="Rol"
@@ -97,6 +78,12 @@ export function UserFormModal({ mode, roles, initialUser, onClose, onSubmit }: U
             </option>
           ))}
         </SelectField>
+        {mode === 'create' && (
+          <p className={styles.hint}>
+            La contraseña la genera el sistema y se envía al correo del usuario. Deberá cambiarla la
+            primera vez que inicie sesión.
+          </p>
+        )}
         {error && <p className={styles.formError}>{error}</p>}
         <div className={styles.actions}>
           <Button type="button" onClick={onClose} disabled={isSubmitting}>

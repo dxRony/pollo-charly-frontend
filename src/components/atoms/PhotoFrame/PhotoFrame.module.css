@@ -1,0 +1,34 @@
+.frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.wide {
+  aspect-ratio: 4 / 3;
+}
+
+.square {
+  aspect-ratio: 1 / 1;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  font-size: clamp(1.5rem, 30%, 3.5rem);
+  line-height: 1;
+  opacity: 0.8;
+  user-select: none;
+}
+
+.wide .placeholder {
+  font-size: 3.5rem;
+}

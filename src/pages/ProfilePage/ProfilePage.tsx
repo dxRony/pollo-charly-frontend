@@ -1,15 +1,20 @@
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/atoms/Button'
+import { ChangePasswordForm } from '@/components/organisms/ChangePasswordForm'
 import { TwoFactorSettings } from '@/components/organisms/TwoFactorSettings'
 import { useAuth } from '@/hooks/useAuth'
+import * as authService from '@/services/authService'
+import type { ChangePasswordPayload } from '@/types/auth'
 import styles from './ProfilePage.module.css'
 
 export function ProfilePage() {
   const { user } = useAuth()
-  const navigate = useNavigate()
 
   if (!user) {
     return null
+  }
+
+  async function handleChangePassword(payload: ChangePasswordPayload): Promise<string> {
+    const response = await authService.changePassword(payload)
+    return response.message
   }
 
   return (
@@ -26,12 +31,13 @@ export function ProfilePage() {
           <dt>Rol</dt>
           <dd>{user.role?.name ?? 'Usuario'}</dd>
         </dl>
-        <Button type="button" onClick={() => navigate('/forgot-password')}>
-          Cambiar contraseña
-        </Button>
       </div>
 
       <TwoFactorSettings />
+
+      <div className={styles.fullWidth}>
+        <ChangePasswordForm onSubmit={handleChangePassword} />
+      </div>
     </div>
   )
 }

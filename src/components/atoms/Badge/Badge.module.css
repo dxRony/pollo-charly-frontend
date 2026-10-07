@@ -21,3 +21,9 @@
   background: #fef3c7;
   color: #b45309;
 }
+
+.accent {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: inset 0 0 0 1.5px var(--color-accent-dark);
+}
