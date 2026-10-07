@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/atoms/Button'
 import { FormField } from '@/components/molecules/FormField'
+import { PasswordField } from '@/components/molecules/PasswordField'
 import styles from './LoginForm.module.css'
 
 interface LoginFormProps {
@@ -43,10 +44,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
           onChange={(event) => setEmail(event.target.value)}
           required
         />
-        <FormField
+        <PasswordField
           id="password"
           label="Contraseña"
-          type="password"
           autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
