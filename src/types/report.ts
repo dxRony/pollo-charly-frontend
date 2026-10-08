@@ -163,4 +163,57 @@ export interface InventoryWasteReportFilters {
   user_id?: number
 }
 
+export interface SupplierPurchasesReportRow {
+  id: number
+  code: string
+  date: string
+  supplier_id: number
+  supplier_name: string
+  status: string | null
+  status_label: string
+  expected_date: string
+  received_date: string
+  punctuality: string
+  items_count: number
+  total: number
+  incidents_count: number
+  incidents_summary: string
+}
+
+export interface SupplierPerformanceSummary {
+  supplier_id: number
+  supplier_name: string
+  orders_count: number
+  total_spent: number
+  completed_count: number
+  incident_count: number
+  total_incidents: number
+  fulfillment_rate: number
+  punctuality_rate: number
+}
+
+export interface SupplierPurchasesSummary {
+  total_purchases_amount: number
+  orders_count: number
+  completed_orders_count: number
+  incident_orders_count: number
+  total_incidents: number
+  fulfillment_rate: number
+  top_supplier: string | null
+}
+
+export interface SupplierPurchasesReport {
+  filters: Record<string, unknown>
+  summary: SupplierPurchasesSummary
+  by_supplier: SupplierPerformanceSummary[]
+  rows: SupplierPurchasesReportRow[]
+}
+
+export interface SupplierPurchasesReportFilters {
+  date_from?: string
+  date_to?: string
+  supplier_id?: number
+  status?: string
+}
+
 export type ReportExportFormat = 'pdf' | 'xlsx'

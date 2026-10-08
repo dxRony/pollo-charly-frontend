@@ -11,7 +11,9 @@ import { useTopDishesReport } from '@/hooks/useTopDishesReport'
 import { useInventoryMovementsReport } from '@/hooks/useInventoryMovementsReport'
 import { useSupplyAlertsReport } from '@/hooks/useSupplyAlertsReport'
 import { useInventoryWasteReport } from '@/hooks/useInventoryWasteReport'
+import { useSupplierPurchasesReport } from '@/hooks/useSupplierPurchasesReport'
 import { useActiveSupplies } from '@/hooks/useActiveSupplies'
+import { useActiveSuppliers } from '@/hooks/useActiveSuppliers'
 import { useCategories } from '@/hooks/useCategories'
 import { useUsers } from '@/hooks/useUsers'
 import * as reportService from '@/services/reportService'
@@ -29,6 +31,7 @@ type ReportTab =
   | 'inventory-movements'
   | 'supply-alerts'
   | 'inventory-waste'
+  | 'supplier-purchases'
 
 const TABS: { value: ReportTab; label: string }[] = [
   { value: 'dashboard', label: 'Panel general' },
@@ -37,6 +40,7 @@ const TABS: { value: ReportTab; label: string }[] = [
   { value: 'inventory-movements', label: 'Movimientos de inventario' },
   { value: 'supply-alerts', label: 'Alertas de reposición' },
   { value: 'inventory-waste', label: 'Mermas y pérdidas' },
+  { value: 'supplier-purchases', label: 'Compras y proveedores' },
 ]
 
 function paymentMethodLabel(value: string | null): string {
@@ -54,12 +58,20 @@ export function ReportsPage() {
   const movements = useInventoryMovementsReport()
   const alerts = useSupplyAlertsReport()
   const waste = useInventoryWasteReport()
+  const purchases = useSupplierPurchasesReport()
   const { categories } = useCategories()
   const { users } = useUsers()
   const { supplies } = useActiveSupplies()
+  const { suppliers } = useActiveSuppliers()
 
   async function handleExport<T extends object>(
-    reportPath: 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts' | 'inventory-waste',
+    reportPath:
+      | 'sales'
+      | 'top-dishes'
+      | 'inventory-movements'
+      | 'supply-alerts'
+      | 'inventory-waste'
+      | 'supplier-purchases',
     filters: T,
     format: ReportExportFormat,
     fileSlug: string,
@@ -444,6 +456,110 @@ export function ReportsPage() {
                   row.user_name,
                   row.approver_name ?? '—',
                   row.reason ?? '—',
+                ])}
+              />
+            </>
+          )}
+        </section>
+      )}
+
+      {activeTab === 'supplier-purchases' && (
+        <section className={styles.section}>
+          <div className={styles.filterRow}>
+            <DateRangeFilter
+              dateFrom={purchases.filters.date_from ?? ''}
+              dateTo={purchases.filters.date_to ?? ''}
+              onDateFromChange={(value) => purchases.updateFilters({ date_from: value || undefined })}
+              onDateToChange={(value) => purchases.updateFilters({ date_to: value || undefined })}
+            />
+            <Select
+              value={purchases.filters.supplier_id ?? ''}
+              onChange={(event) =>
+                purchases.updateFilters({
+                  supplier_id: event.target.value === '' ? undefined : Number(event.target.value),
+                })
+              }
+            >
+              <option value="">Todos los proveedores</option>
+              {suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.company_name}
+                </option>
+              ))}
+            </Select>
+            <Select
+              value={purchases.filters.status ?? ''}
+              onChange={(event) =>
+                purchases.updateFilters({
+                  status: event.target.value || undefined,
+                })
+              }
+            >
+              <option value="">Todos los estados</option>
+              <option value="recibida_completa">Recibida completa</option>
+              <option value="recibida_con_incidencia">Con incidencia</option>
+              <option value="solicitada">Solicitada</option>
+              <option value="cancelada">Cancelada</option>
+            </Select>
+            <ExportButtons
+              isExporting={isExporting}
+              onExportPdf={() =>
+                handleExport('supplier-purchases', purchases.filters, 'pdf', 'reporte-compras-proveedores')
+              }
+              onExportExcel={() =>
+                handleExport('supplier-purchases', purchases.filters, 'xlsx', 'reporte-compras-proveedores')
+              }
+            />
+          </div>
+
+          {purchases.error && <p className={styles.error}>{purchases.error}</p>}
+          {purchases.isLoading && <p className={styles.loading}>Cargando reporte de compras...</p>}
+
+          {purchases.report && (
+            <>
+              <div className={styles.kpiRow}>
+                <KpiCard
+                  label="Total comprado"
+                  value={money(purchases.report.summary.total_purchases_amount)}
+                />
+                <KpiCard
+                  label="N° de órdenes"
+                  value={String(purchases.report.summary.orders_count)}
+                />
+                <KpiCard
+                  label="Entregas conformes"
+                  value={String(purchases.report.summary.completed_orders_count)}
+                />
+                <KpiCard
+                  label="Cumplimiento"
+                  value={`${purchases.report.summary.fulfillment_rate}%`}
+                />
+              </div>
+
+              <ReportDataTable
+                columns={[
+                  'N° Orden',
+                  'Fecha',
+                  'Proveedor',
+                  'Estado',
+                  'F. Esperada',
+                  'F. Entrega',
+                  'Puntualidad',
+                  'Ítems',
+                  'Total',
+                  'Incidencias',
+                ]}
+                rows={purchases.report.rows.map((row) => [
+                  row.code,
+                  row.date,
+                  row.supplier_name,
+                  row.status_label,
+                  row.expected_date,
+                  row.received_date,
+                  row.punctuality,
+                  row.items_count,
+                  money(row.total),
+                  row.incidents_summary,
                 ])}
               />
             </>

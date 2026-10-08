@@ -9,6 +9,8 @@ import type {
   ReportExportFormat,
   SalesReport,
   SalesReportFilters,
+  SupplierPurchasesReport,
+  SupplierPurchasesReportFilters,
   SupplyAlertsReport,
   SupplyAlertsReportFilters,
   TopDishesReport,
@@ -54,8 +56,20 @@ export function getInventoryWasteReport(
   return apiFetch<InventoryWasteReport>(`/reports/inventory-waste${toQuery(filters)}`)
 }
 
+export function getSupplierPurchasesReport(
+  filters: SupplierPurchasesReportFilters,
+): Promise<SupplierPurchasesReport> {
+  return apiFetch<SupplierPurchasesReport>(`/reports/supplier-purchases${toQuery(filters)}`)
+}
+
 export function exportReport<T extends object>(
-  reportPath: 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts' | 'inventory-waste',
+  reportPath:
+    | 'sales'
+    | 'top-dishes'
+    | 'inventory-movements'
+    | 'supply-alerts'
+    | 'inventory-waste'
+    | 'supplier-purchases',
   filters: T,
   format: ReportExportFormat,
   filename: string,
