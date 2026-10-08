@@ -6,6 +6,8 @@ import type {
   ResetPasswordPayload,
   TwoFactorStatusResponse,
   TwoFactorToggleResponse,
+  UpdateProfilePayload,
+  UpdateProfileResponse,
   User,
   VerifyTwoFactorResponse,
 } from '@/types/auth'
@@ -85,3 +87,11 @@ export async function logout(): Promise<void> {
 export function getCurrentUser(): Promise<User> {
   return apiFetch<User>('/me')
 }
+
+export function updateProfile(payload: UpdateProfilePayload): Promise<UpdateProfileResponse> {
+  return apiFetch<UpdateProfileResponse>('/me', {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
