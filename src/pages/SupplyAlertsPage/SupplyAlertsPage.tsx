@@ -3,9 +3,11 @@ import { Button } from '@/components/atoms/Button'
 import { SupplyAlertsFilterBar } from '@/components/organisms/SupplyAlertsFilterBar'
 import { SupplyAlertsTable } from '@/components/organisms/SupplyAlertsTable'
 import { SupplyAlertFormModal } from '@/components/organisms/SupplyAlertFormModal'
+import { ReviewAdjustmentModal } from '@/components/organisms/ReviewAdjustmentModal'
 import { useSupplyAlerts } from '@/hooks/useSupplyAlerts'
 import { useActiveSupplies } from '@/hooks/useActiveSupplies'
 import * as supplyAlertService from '@/services/supplyAlertService'
+import * as inventoryMovementService from '@/services/inventoryMovementService'
 import { ApiError } from '@/services/api'
 import type { CreateSupplyAlertPayload, SupplyAlert } from '@/types/supplyAlert'
 import styles from './SupplyAlertsPage.module.css'
@@ -15,15 +17,15 @@ export function SupplyAlertsPage() {
     useSupplyAlerts()
   const { supplies } = useActiveSupplies()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [alertToReview, setAlertToReview] = useState<SupplyAlert | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<string | null>(null)
 
   async function handleFormSubmit(payload: CreateSupplyAlertPayload) {
     await supplyAlertService.createSupplyAlert(payload)
     setIsModalOpen(false)
     await refetch()
   }
-
-  const [feedback, setFeedback] = useState<string | null>(null)
 
   async function handleAttend(alert: SupplyAlert) {
     setActionError(null)
@@ -39,6 +41,40 @@ export function SupplyAlertsPage() {
       } else {
         setActionError(err instanceof Error ? err.message : 'No se pudo atender la alerta.')
       }
+    }
+  }
+
+  async function handleApproveAdjustment(movementId: number, reason?: string) {
+    setActionError(null)
+    setFeedback(null)
+    try {
+      await inventoryMovementService.approveAdjustment(movementId, { reason })
+      setFeedback('Ajuste de inventario aprobado y alerta atendida exitosamente.')
+      await refetch()
+      setTimeout(() => setFeedback(null), 6000)
+    } catch (err) {
+      const msg = err instanceof ApiError && err.errors
+        ? Object.values(err.errors).flat().join(' ')
+        : (err instanceof Error ? err.message : 'No se pudo aprobar el ajuste de inventario.')
+      setActionError(msg)
+      throw new Error(msg, { cause: err })
+    }
+  }
+
+  async function handleRejectAdjustment(movementId: number, reason?: string) {
+    setActionError(null)
+    setFeedback(null)
+    try {
+      await inventoryMovementService.rejectAdjustment(movementId, { reason })
+      setFeedback('Ajuste de inventario rechazado y alerta cerrada exitosamente.')
+      await refetch()
+      setTimeout(() => setFeedback(null), 6000)
+    } catch (err) {
+      const msg = err instanceof ApiError && err.errors
+        ? Object.values(err.errors).flat().join(' ')
+        : (err instanceof Error ? err.message : 'No se pudo rechazar el ajuste de inventario.')
+      setActionError(msg)
+      throw new Error(msg, { cause: err })
     }
   }
 
@@ -66,7 +102,11 @@ export function SupplyAlertsPage() {
       {isLoading ? (
         <p className={styles.loading}>Cargando alertas...</p>
       ) : (
-        <SupplyAlertsTable alerts={alerts} onAttend={handleAttend} />
+        <SupplyAlertsTable
+          alerts={alerts}
+          onAttend={handleAttend}
+          onReviewAdjustment={(alert) => setAlertToReview(alert)}
+        />
       )}
 
       {pagination && pagination.lastPage > 1 && (
@@ -98,6 +138,38 @@ export function SupplyAlertsPage() {
           availableSupplies={supplies}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleFormSubmit}
+        />
+      )}
+
+      {alertToReview && alertToReview.inventory_movement_id && (
+        <ReviewAdjustmentModal
+          movement={
+            alertToReview.inventory_movement ?? {
+              id: alertToReview.inventory_movement_id,
+              supply_id: alertToReview.supply_id,
+              supply: alertToReview.supply,
+              inventory_movement_type_id: 4,
+              movement_type: { id: 4, name: 'ajuste_inventario' },
+              type: 'ajuste_inventario',
+              user_id: alertToReview.user_id ?? 0,
+              user: alertToReview.user,
+              quantity: 0,
+              previous_stock: alertToReview.supply?.current_stock ?? 0,
+              new_stock: alertToReview.supply?.current_stock ?? 0,
+              reason: alertToReview.notes,
+              order_id: null,
+              order_item_id: null,
+              purchase_order_id: null,
+              adjustment_status_type_id: 1,
+              adjustment_status: { id: 1, name: 'pendiente_aprobacion' },
+              approver_user_id: null,
+              approver_user: null,
+              created_at: alertToReview.created_at,
+            }
+          }
+          onClose={() => setAlertToReview(null)}
+          onApprove={handleApproveAdjustment}
+          onReject={handleRejectAdjustment}
         />
       )}
     </div>
