@@ -10,6 +10,8 @@ import { useSalesReport } from '@/hooks/useSalesReport'
 import { useTopDishesReport } from '@/hooks/useTopDishesReport'
 import { useInventoryMovementsReport } from '@/hooks/useInventoryMovementsReport'
 import { useSupplyAlertsReport } from '@/hooks/useSupplyAlertsReport'
+import { useInventoryWasteReport } from '@/hooks/useInventoryWasteReport'
+import { useActiveSupplies } from '@/hooks/useActiveSupplies'
 import { useCategories } from '@/hooks/useCategories'
 import { useUsers } from '@/hooks/useUsers'
 import * as reportService from '@/services/reportService'
@@ -20,7 +22,13 @@ import type { ReportExportFormat } from '@/types/report'
 import { formatCurrency as money } from '@/utils/formatCurrency'
 import styles from './ReportsPage.module.css'
 
-type ReportTab = 'dashboard' | 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts'
+type ReportTab =
+  | 'dashboard'
+  | 'sales'
+  | 'top-dishes'
+  | 'inventory-movements'
+  | 'supply-alerts'
+  | 'inventory-waste'
 
 const TABS: { value: ReportTab; label: string }[] = [
   { value: 'dashboard', label: 'Panel general' },
@@ -28,6 +36,7 @@ const TABS: { value: ReportTab; label: string }[] = [
   { value: 'top-dishes', label: 'Platillos más vendidos' },
   { value: 'inventory-movements', label: 'Movimientos de inventario' },
   { value: 'supply-alerts', label: 'Alertas de reposición' },
+  { value: 'inventory-waste', label: 'Mermas y pérdidas' },
 ]
 
 function paymentMethodLabel(value: string | null): string {
@@ -44,11 +53,13 @@ export function ReportsPage() {
   const topDishes = useTopDishesReport()
   const movements = useInventoryMovementsReport()
   const alerts = useSupplyAlertsReport()
+  const waste = useInventoryWasteReport()
   const { categories } = useCategories()
   const { users } = useUsers()
+  const { supplies } = useActiveSupplies()
 
   async function handleExport<T extends object>(
-    reportPath: 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts',
+    reportPath: 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts' | 'inventory-waste',
     filters: T,
     format: ReportExportFormat,
     fileSlug: string,
@@ -340,6 +351,102 @@ export function ReportsPage() {
                 row.notes,
               ])}
             />
+          )}
+        </section>
+      )}
+
+      {activeTab === 'inventory-waste' && (
+        <section className={styles.section}>
+          <div className={styles.filterRow}>
+            <DateRangeFilter
+              dateFrom={waste.filters.date_from ?? ''}
+              dateTo={waste.filters.date_to ?? ''}
+              onDateFromChange={(value) => waste.updateFilters({ date_from: value || undefined })}
+              onDateToChange={(value) => waste.updateFilters({ date_to: value || undefined })}
+            />
+            <Select
+              value={waste.filters.supply_id ?? ''}
+              onChange={(event) =>
+                waste.updateFilters({
+                  supply_id: event.target.value === '' ? undefined : Number(event.target.value),
+                })
+              }
+            >
+              <option value="">Todos los insumos</option>
+              {supplies.map((supply) => (
+                <option key={supply.id} value={supply.id}>
+                  {supply.name}
+                </option>
+              ))}
+            </Select>
+            <Select
+              value={waste.filters.user_id ?? ''}
+              onChange={(event) =>
+                waste.updateFilters({
+                  user_id: event.target.value === '' ? undefined : Number(event.target.value),
+                })
+              }
+            >
+              <option value="">Todos los usuarios</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </Select>
+            <ExportButtons
+              isExporting={isExporting}
+              onExportPdf={() =>
+                handleExport('inventory-waste', waste.filters, 'pdf', 'reporte-mermas-perdidas')
+              }
+              onExportExcel={() =>
+                handleExport('inventory-waste', waste.filters, 'xlsx', 'reporte-mermas-perdidas')
+              }
+            />
+          </div>
+
+          {waste.error && <p className={styles.error}>{waste.error}</p>}
+          {waste.isLoading && <p className={styles.loading}>Cargando reporte de mermas...</p>}
+
+          {waste.report && (
+            <>
+              <div className={styles.kpiRow}>
+                <KpiCard label="Costo total de pérdida" value={money(waste.report.summary.total_loss_cost)} />
+                <KpiCard label="Total mermado" value={String(waste.report.summary.total_quantity)} />
+                <KpiCard label="N° de registros" value={String(waste.report.summary.records_count)} />
+                <KpiCard
+                  label="Insumo más afectado"
+                  value={waste.report.summary.top_wasted_supply ?? 'Ninguno'}
+                />
+              </div>
+
+              <ReportDataTable
+                columns={[
+                  'Fecha',
+                  'Insumo',
+                  'Tipo de pérdida',
+                  'Cantidad',
+                  'Unidad',
+                  'Costo unit.',
+                  'Costo total',
+                  'Registrado por',
+                  'Aprobado por',
+                  'Motivo',
+                ]}
+                rows={waste.report.rows.map((row) => [
+                  row.date,
+                  row.supply_name,
+                  row.type,
+                  row.quantity,
+                  row.unit,
+                  money(row.unit_cost),
+                  money(row.total_cost),
+                  row.user_name,
+                  row.approver_name ?? '—',
+                  row.reason ?? '—',
+                ])}
+              />
+            </>
           )}
         </section>
       )}

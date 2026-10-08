@@ -117,4 +117,50 @@ export interface SupplyAlertsReportFilters {
   supply_id?: number
 }
 
+export interface InventoryWasteReportRow {
+  id: number
+  date: string
+  supply_id: number
+  supply_name: string
+  unit: string
+  type: string
+  quantity: number
+  previous_stock: number
+  new_stock: number
+  unit_cost: number
+  total_cost: number
+  user_name: string
+  approver_name: string | null
+  reason: string | null
+}
+
+export interface InventoryWasteSupplySummary {
+  supply_name: string
+  unit: string
+  total_quantity: number
+  total_cost: number
+  records_count: number
+}
+
+export interface InventoryWasteSummary {
+  total_loss_cost: number
+  total_quantity: number
+  records_count: number
+  top_wasted_supply: string | null
+}
+
+export interface InventoryWasteReport {
+  filters: Record<string, unknown>
+  summary: InventoryWasteSummary
+  by_supply: InventoryWasteSupplySummary[]
+  rows: InventoryWasteReportRow[]
+}
+
+export interface InventoryWasteReportFilters {
+  date_from?: string
+  date_to?: string
+  supply_id?: number
+  user_id?: number
+}
+
 export type ReportExportFormat = 'pdf' | 'xlsx'
