@@ -4,6 +4,7 @@ import { FormField } from '@/components/molecules/FormField'
 import { SelectField } from '@/components/molecules/SelectField'
 import { TextareaField } from '@/components/molecules/TextareaField'
 import { Modal } from '@/components/molecules/Modal'
+import { useAuth } from '@/hooks/useAuth'
 import { MOVEMENT_TYPE_OPTIONS } from '@/types/inventoryMovement'
 import type { CreateInventoryMovementPayload, InventoryMovementTypeAlias } from '@/types/inventoryMovement'
 import type { Supply } from '@/types/supply'
@@ -20,8 +21,10 @@ export function InventoryMovementFormModal({
   onClose,
   onSubmit,
 }: InventoryMovementFormModalProps) {
+  const { user } = useAuth()
+  const isNonAdmin = user?.role?.name !== 'Administrador'
   const [supplyId, setSupplyId] = useState<number | ''>('')
-  const [type, setType] = useState<InventoryMovementTypeAlias>('compra')
+  const [type, setType] = useState<InventoryMovementTypeAlias>(isNonAdmin ? 'ajuste' : 'compra')
   const [quantity, setQuantity] = useState('')
   const [newStock, setNewStock] = useState('')
   const [reason, setReason] = useState('')
@@ -100,7 +103,10 @@ export function InventoryMovementFormModal({
           onChange={(event) => setType(event.target.value as InventoryMovementTypeAlias)}
           required
         >
-          {MOVEMENT_TYPE_OPTIONS.map((option) => (
+          {(isNonAdmin
+            ? MOVEMENT_TYPE_OPTIONS.filter((option) => option.value === 'ajuste' || option.value === 'merma')
+            : MOVEMENT_TYPE_OPTIONS
+          ).map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
@@ -137,6 +143,21 @@ export function InventoryMovementFormModal({
           rows={3}
           required={reasonRequired}
         />
+        {isAjuste && (
+          <p
+            style={{
+              fontSize: '0.8125rem',
+              color: '#1e40af',
+              backgroundColor: '#eff6ff',
+              border: '1px solid #bfdbfe',
+              padding: '0.5rem 0.75rem',
+              borderRadius: '0.375rem',
+              margin: '0.25rem 0 0.5rem',
+            }}
+          >
+            ℹ️ Los ajustes manuales quedan pendientes y generan una alerta a la administradora con el producto, motivo, fecha y tu usuario para su aprobación.
+          </p>
+        )}
         {error && <p className={styles.formError}>{error}</p>}
         <div className={styles.actions}>
           <Button type="button" onClick={onClose} disabled={isSubmitting}>

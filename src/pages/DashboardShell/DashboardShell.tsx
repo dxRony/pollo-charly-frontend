@@ -23,9 +23,13 @@ const MESERO_TABS: DashboardTab[] = [
   { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
   { label: 'Recepción Compras', icon: '🛒', to: '/dashboard/purchases' },
   { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
+  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
 ]
 
-const COCINERO_TABS: DashboardTab[] = [{ label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' }]
+const COCINERO_TABS: DashboardTab[] = [
+  { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
+  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
+]
 
 const TABS_BY_ROLE: Record<string, DashboardTab[]> = {
   Administrador: ADMIN_TABS,
