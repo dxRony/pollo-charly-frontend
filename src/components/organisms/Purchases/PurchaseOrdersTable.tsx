@@ -10,6 +10,7 @@ import styles from './PurchaseRequestsTable.module.css'
 interface PurchaseOrdersTableProps {
   orders: PurchaseOrder[]
   onReceiveClick: (order: PurchaseOrder) => void
+  onReportIncidentClick: (order: PurchaseOrder) => void
   onDetailClick: (order: PurchaseOrder) => void
 }
 
@@ -31,6 +32,7 @@ function getOrderStatusTone(status: PurchaseOrderStatusName): 'success' | 'neutr
 export function PurchaseOrdersTable({
   orders,
   onReceiveClick,
+  onReportIncidentClick,
   onDetailClick,
 }: PurchaseOrdersTableProps) {
   if (orders.length === 0) {
@@ -54,6 +56,7 @@ export function PurchaseOrdersTable({
         <tbody>
           {orders.map((order) => {
             const isSolicitada = order.status === 'solicitada'
+            const isRecibidaConIncidencia = order.status === 'recibida_con_incidencia'
 
             return (
               <tr key={order.id}>
@@ -86,13 +89,33 @@ export function PurchaseOrdersTable({
                 <td>
                   <div className={styles.actions}>
                     {isSolicitada && (
+                      <>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="primary"
+                          onClick={() => onReceiveClick(order)}
+                        >
+                          Confirmar Recepción
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="accent"
+                          onClick={() => onReportIncidentClick(order)}
+                        >
+                          Reportar Incidencia
+                        </Button>
+                      </>
+                    )}
+                    {isRecibidaConIncidencia && (
                       <Button
                         type="button"
                         size="sm"
                         variant="primary"
                         onClick={() => onReceiveClick(order)}
                       >
-                        Confirmar Recepción
+                        Revisar Entrega Corregida
                       </Button>
                     )}
                     <Button

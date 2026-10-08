@@ -89,6 +89,30 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
           </div>
         </div>
 
+        {order.delivery_incidents && (order.delivery_incidents as Array<{ id: number; type?: string; status?: string; description?: string; receiving_user_name?: string; created_at?: string }>).length > 0 && (
+          <div className={styles.section}>
+            <span className={styles.label} style={{ color: '#b91c1c' }}>Incidencias Reportadas</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {(order.delivery_incidents as Array<{ id: number; type?: string; status?: string; description?: string; receiving_user_name?: string; created_at?: string }>).map((inc) => (
+                <div key={inc.id} style={{ background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: '0.375rem', padding: '0.75rem', fontSize: '0.875rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                    <strong style={{ color: '#991b1b', textTransform: 'capitalize' }}>
+                      {inc.type ? inc.type.replace(/_/g, ' ') : 'Incidencia'}
+                    </strong>
+                    <Badge tone={inc.status === 'resuelta' ? 'success' : 'accent'}>
+                      {inc.status ?? 'reportada'}
+                    </Badge>
+                  </div>
+                  <p style={{ margin: '0.25rem 0', color: '#374151' }}>{inc.description}</p>
+                  <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                    Reportada por: {inc.receiving_user_name ?? 'Mesero/Cajero'} • {inc.created_at ? new Date(inc.created_at).toLocaleString() : ''}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className={styles.totalRow}>
           <span>Total de la Orden:</span>
           <span className={styles.totalAmount}>${order.total.toFixed(2)}</span>

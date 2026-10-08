@@ -21,6 +21,7 @@ const ADMIN_TABS: DashboardTab[] = [
 
 const MESERO_TABS: DashboardTab[] = [
   { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
+  { label: 'Recepción Compras', icon: '🛒', to: '/dashboard/purchases' },
   { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
 ]
 
