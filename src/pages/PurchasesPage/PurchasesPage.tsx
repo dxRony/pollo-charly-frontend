@@ -9,7 +9,9 @@ import {
   PurchaseOrdersTable,
   PurchaseRequestsTable,
   RejectRequestModal,
+  ReportIncidentModal,
 } from '@/components/organisms/Purchases'
+import { useAuth } from '@/hooks/useAuth'
 import { useActiveSuppliers } from '@/hooks/useActiveSuppliers'
 import { useActiveSupplies } from '@/hooks/useActiveSupplies'
 import { usePurchaseOrders } from '@/hooks/usePurchaseOrders'
@@ -23,11 +25,15 @@ import type {
   PurchaseRequest,
   ReceivePurchaseOrderPayload,
   RejectPurchaseRequestPayload,
+  ReportOrderIncidentPayload,
 } from '@/types/purchase'
 import styles from './PurchasesPage.module.css'
 
 export function PurchasesPage() {
-  const [activeTab, setActiveTab] = useState<'requests' | 'orders'>('requests')
+  const { user } = useAuth()
+  const isAdmin = user?.role?.name === 'Administrador'
+
+  const [activeTab, setActiveTab] = useState<'requests' | 'orders'>(isAdmin ? 'requests' : 'orders')
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
 
@@ -35,7 +41,7 @@ export function PurchasesPage() {
   const { suppliers } = useActiveSuppliers()
   const { supplies } = useActiveSupplies()
 
-  // Requests state
+  // Requests state (only fetched if admin)
   const {
     requests,
     pagination: reqPagination,
@@ -45,7 +51,7 @@ export function PurchasesPage() {
     updateFilters: updateReqFilters,
     setPage: setReqPage,
     refetch: refetchRequests,
-  } = usePurchaseRequests()
+  } = usePurchaseRequests({}, isAdmin)
 
   // Orders state
   const {
@@ -65,6 +71,7 @@ export function PurchasesPage() {
   const [isCreateRequestOpen, setIsCreateRequestOpen] = useState(false)
   const [isManualPurchaseOpen, setIsManualPurchaseOpen] = useState(false)
   const [orderToReceive, setOrderToReceive] = useState<PurchaseOrder | null>(null)
+  const [orderToReportIncident, setOrderToReportIncident] = useState<PurchaseOrder | null>(null)
   const [orderDetail, setOrderDetail] = useState<PurchaseOrder | null>(null)
 
   const pendingRequestsCount = requests.filter((r) => r.status === 'pendiente').length
@@ -111,35 +118,48 @@ export function PurchasesPage() {
     await refetchOrders()
   }
 
+  async function handleReportIncident(payload: ReportOrderIncidentPayload) {
+    if (!orderToReportIncident) return
+    const res = await purchaseService.reportPurchaseOrderIncident(orderToReportIncident.id, payload)
+    showFeedback(res.message)
+    await refetchOrders()
+  }
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Gestión de Compras y Abastecimiento</h1>
+        <h1 className={styles.title}>
+          {isAdmin ? 'Gestión de Compras y Abastecimiento' : 'Recepción de Compras e Incidencias'}
+        </h1>
         <p className={styles.subtitle}>
-          Control de solicitudes de reposición, órdenes de compra a proveedores y recepción en almacén
+          {isAdmin
+            ? 'Control de solicitudes de reposición, órdenes de compra a proveedores y recepción en almacén'
+            : 'Recepción de pedidos de compra a proveedores, verificación conforme y registro de incidencias'}
         </p>
       </header>
 
-      {/* Tabs */}
-      <div className={styles.tabsBar}>
-        <button
-          type="button"
-          className={`${styles.tabButton} ${activeTab === 'requests' ? styles.tabActive : ''}`}
-          onClick={() => setActiveTab('requests')}
-        >
-          <span>Solicitudes de Compra</span>
-          {pendingRequestsCount > 0 && (
-            <span className={styles.tabBadge}>{pendingRequestsCount}</span>
-          )}
-        </button>
-        <button
-          type="button"
-          className={`${styles.tabButton} ${activeTab === 'orders' ? styles.tabActive : ''}`}
-          onClick={() => setActiveTab('orders')}
-        >
-          <span>Órdenes de Compra y Recepción</span>
-        </button>
-      </div>
+      {/* Tabs bar: Only for administrators */}
+      {isAdmin && (
+        <div className={styles.tabsBar}>
+          <button
+            type="button"
+            className={`${styles.tabButton} ${activeTab === 'requests' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('requests')}
+          >
+            <span>Solicitudes de Compra</span>
+            {pendingRequestsCount > 0 && (
+              <span className={styles.tabBadge}>{pendingRequestsCount}</span>
+            )}
+          </button>
+          <button
+            type="button"
+            className={`${styles.tabButton} ${activeTab === 'orders' ? styles.tabActive : ''}`}
+            onClick={() => setActiveTab('orders')}
+          >
+            <span>Órdenes de Compra y Recepción</span>
+          </button>
+        </div>
+      )}
 
       {feedbackMessage && (
         <div className={styles.feedbackBanner}>
@@ -156,8 +176,8 @@ export function PurchasesPage() {
 
       {actionError && <div className={styles.errorMessage}>{actionError}</div>}
 
-      {/* TAB 1: Solicitudes de compra */}
-      {activeTab === 'requests' && (
+      {/* TAB 1: Solicitudes de compra (Admin only) */}
+      {isAdmin && activeTab === 'requests' && (
         <>
           <div className={styles.controlsBar}>
             <div className={styles.filtersGroup}>
@@ -231,8 +251,8 @@ export function PurchasesPage() {
         </>
       )}
 
-      {/* TAB 2: Órdenes de compra y recepción */}
-      {activeTab === 'orders' && (
+      {/* TAB 2 / Default: Órdenes de compra y recepción */}
+      {(activeTab === 'orders' || !isAdmin) && (
         <>
           <div className={styles.controlsBar}>
             <div className={styles.filtersGroup}>
@@ -265,14 +285,17 @@ export function PurchasesPage() {
                 onChange={(e) => updateOrdFilters({ status: e.target.value || undefined })}
               >
                 <option value="">Todos los estados</option>
-                <option value="solicitada">Solicitadas</option>
-                <option value="recibida_completa">Recibidas</option>
+                <option value="solicitada">Solicitadas (Pendientes entrega)</option>
+                <option value="recibida_con_incidencia">Con Incidencia (En corrección)</option>
+                <option value="recibida_completa">Recibidas Conformes</option>
                 <option value="cancelada">Canceladas</option>
               </select>
             </div>
-            <Button type="button" variant="primary" onClick={() => setIsManualPurchaseOpen(true)}>
-              + Registrar Compra Manual
-            </Button>
+            {isAdmin && (
+              <Button type="button" variant="primary" onClick={() => setIsManualPurchaseOpen(true)}>
+                + Registrar Compra Manual
+              </Button>
+            )}
           </div>
 
           {ordError && <div className={styles.errorMessage}>{ordError}</div>}
@@ -283,6 +306,7 @@ export function PurchasesPage() {
             <PurchaseOrdersTable
               orders={orders}
               onReceiveClick={(order) => setOrderToReceive(order)}
+              onReportIncidentClick={(order) => setOrderToReportIncident(order)}
               onDetailClick={(order) => setOrderDetail(order)}
             />
           )}
@@ -355,6 +379,14 @@ export function PurchasesPage() {
           order={orderToReceive}
           onClose={() => setOrderToReceive(null)}
           onConfirm={handleConfirmReceive}
+        />
+      )}
+
+      {orderToReportIncident && (
+        <ReportIncidentModal
+          order={orderToReportIncident}
+          onClose={() => setOrderToReportIncident(null)}
+          onReport={handleReportIncident}
         />
       )}
 

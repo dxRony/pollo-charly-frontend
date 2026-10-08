@@ -7,11 +7,11 @@ import type {
   PurchaseRequestFilters,
 } from '@/types/purchase'
 
-export function usePurchaseRequests(initialFilters: PurchaseRequestFilters = {}) {
+export function usePurchaseRequests(initialFilters: PurchaseRequestFilters = {}, enabled = true) {
   const [requests, setRequests] = useState<PurchaseRequest[]>([])
   const [pagination, setPagination] = useState<PaginatedPurchaseRequests | null>(null)
   const [filters, setFilters] = useState<PurchaseRequestFilters>(initialFilters)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(enabled)
   const [error, setError] = useState<string | null>(null)
 
   const fetchRequests = useCallback(async (currentFilters: PurchaseRequestFilters) => {
@@ -35,9 +35,11 @@ export function usePurchaseRequests(initialFilters: PurchaseRequestFilters = {})
   const { status, search, date_from, date_to, page, per_page } = filters
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchRequests({ status, search, date_from, date_to, page, per_page })
-  }, [fetchRequests, status, search, date_from, date_to, page, per_page])
+    if (enabled) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchRequests({ status, search, date_from, date_to, page, per_page })
+    }
+  }, [fetchRequests, status, search, date_from, date_to, page, per_page, enabled])
 
   function updateFilters(newFilters: Partial<PurchaseRequestFilters>) {
     setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }))

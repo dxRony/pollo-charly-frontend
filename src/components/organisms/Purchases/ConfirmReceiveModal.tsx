@@ -11,6 +11,7 @@ interface ConfirmReceiveModalProps {
 }
 
 export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiveModalProps) {
+  const isCorrected = order.status === 'recibida_con_incidencia'
   const [receivedDate, setReceivedDate] = useState<string>(
     new Date().toISOString().substring(0, 10),
   )
@@ -37,20 +38,60 @@ export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiv
     }
   }
 
+  const modalTitle = isCorrected
+    ? `Revisar y Recibir Entrega Corregida: ${order.code}`
+    : `Confirmar Recepción Conforme: ${order.code}`
+
   return (
-    <Modal title={`Confirmar Recepción de Compra: ${order.code}`} onClose={onClose}>
+    <Modal title={modalTitle} onClose={onClose}>
       <form onSubmit={handleSubmit} className={styles.form}>
         {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
-        <p style={{ color: '#4b5563', fontSize: '0.9rem' }}>
-          Al confirmar la recepción, se ingresarán automáticamente los insumos al almacén sumando sus existencias y registrando el movimiento de inventario de tipo <strong>compra_entrada</strong>.
-        </p>
+        {isCorrected ? (
+          <div style={{ background: '#fef3c7', border: '1px solid #fde68a', padding: '0.75rem', borderRadius: '0.375rem', fontSize: '0.875rem', color: '#92400e' }}>
+            <p style={{ margin: 0 }}>
+              <strong>Proveedor corrigió o repuso los productos:</strong> Al confirmar la recepción conforme de la entrega corregida, el sistema dará por recibida completa la orden, actualizará las existencias en almacén, registrará el movimiento de inventario (<strong>compra_entrada</strong>) y resolverá las incidencias abiertas asociadas.
+            </p>
+          </div>
+        ) : (
+          <p style={{ color: '#4b5563', fontSize: '0.875rem', margin: 0 }}>
+            Verifique la cantidad, peso y calidad de los insumos entregados. Al confirmar la recepción conforme, se ingresarán automáticamente los insumos al almacén sumando sus existencias y registrando el movimiento de inventario (<strong>compra_entrada</strong>).
+          </p>
+        )}
 
         <div style={{ background: '#f3f4f6', padding: '0.75rem', borderRadius: '0.375rem', fontSize: '0.875rem' }}>
           <p><strong>Proveedor:</strong> {order.supplier_name ?? `ID #${order.supplier_id}`}</p>
           <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
-          <p><strong>Productos:</strong> {order.items?.length ?? 0} ítems</p>
+          <p><strong>Ítems a recibir:</strong> {order.items?.length ?? 0} insumos</p>
         </div>
+
+        {order.items && order.items.length > 0 && (
+          <div className={styles.section}>
+            <label className={styles.label}>Productos a verificar en entrega</label>
+            <div className={styles.tableWrapper}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Insumo</th>
+                    <th>Cantidad Solicitada</th>
+                    <th>Precio Unit.</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {order.items.map((item) => (
+                    <tr key={item.id}>
+                      <td><strong>{item.supply_name ?? `Insumo #${item.supply_id}`}</strong></td>
+                      <td>{item.ordered_quantity} {item.measurement_unit ?? ''}</td>
+                      <td>${item.unit_price.toFixed(2)}</td>
+                      <td>${item.subtotal.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <div className={styles.section}>
           <label className={styles.label} htmlFor="receiveDate">
@@ -68,13 +109,17 @@ export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiv
 
         <div className={styles.section}>
           <label className={styles.label} htmlFor="receiveNotes">
-            Observaciones o Notas de Entrega
+            Observaciones de la Recepción
           </label>
           <textarea
             id="receiveNotes"
             rows={2}
             className={styles.input}
-            placeholder="Mercancía entregada en perfecto estado..."
+            placeholder={
+              isCorrected
+                ? 'Proveedor repuso productos faltantes/corregidos en óptimas condiciones...'
+                : 'Mercancía verificada y entregada en perfecto estado...'
+            }
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
@@ -85,7 +130,11 @@ export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiv
             Cancelar
           </Button>
           <Button type="submit" variant="primary" disabled={isSubmitting}>
-            {isSubmitting ? 'Procesando...' : 'Confirmar Recepción y Actualizar Stock'}
+            {isSubmitting
+              ? 'Procesando...'
+              : isCorrected
+                ? 'Confirmar Entrega Corregida y Actualizar Stock'
+                : 'Confirmar Recepción y Actualizar Stock'}
           </Button>
         </div>
       </form>

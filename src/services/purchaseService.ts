@@ -11,6 +11,7 @@ import type {
   PurchaseRequestFilters,
   ReceivePurchaseOrderPayload,
   RejectPurchaseRequestPayload,
+  ReportOrderIncidentPayload,
 } from '@/types/purchase'
 
 function buildQueryString(params: Record<string, string | number | undefined>): string {
@@ -116,3 +117,17 @@ export function cancelPurchaseOrder(
     },
   )
 }
+
+export function reportPurchaseOrderIncident(
+  id: number,
+  payload: ReportOrderIncidentPayload,
+): Promise<{ message: string; purchase_order: PurchaseOrder; incident: unknown }> {
+  return apiFetch<{ message: string; purchase_order: PurchaseOrder; incident: unknown }>(
+    `/purchase-orders/${id}/incident`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  )
+}
+

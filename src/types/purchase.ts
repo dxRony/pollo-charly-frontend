@@ -139,9 +139,21 @@ export interface CreatePurchaseOrderPayload {
   }>
 }
 
+export interface ReceivePurchaseOrderItemPayload {
+  supply_id: number
+  received_quantity: number
+}
+
 export interface ReceivePurchaseOrderPayload {
   received_date?: string
   notes?: string
+  items?: ReceivePurchaseOrderItemPayload[]
+}
+
+export interface ReportOrderIncidentPayload {
+  delivery_incident_type_id: number
+  description: string
+  evidence_path?: string
 }
 
 export const PURCHASE_REQUEST_STATUS_LABELS: Record<PurchaseRequestStatusName, string> = {
