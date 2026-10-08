@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/atoms/Button'
 import { Logo } from '@/components/atoms/Logo'
@@ -18,12 +19,31 @@ interface DashboardNavBarProps {
 }
 
 export function DashboardNavBar({ tabs, onProfile, onLogout }: DashboardNavBarProps) {
+  const tabsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = tabsRef.current
+    if (!el) return
+
+    const handleWheel = (e: WheelEvent) => {
+      if (el.scrollWidth > el.clientWidth && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault()
+        el.scrollLeft += e.deltaY
+      }
+    }
+
+    el.addEventListener('wheel', handleWheel, { passive: false })
+    return () => {
+      el.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
   return (
     <nav className={styles.nav}>
       <Link to="/dashboard" className={styles.logoLink} aria-label="Ir al panel principal">
         <Logo size="sm" />
       </Link>
-      <div className={styles.tabs}>
+      <div ref={tabsRef} className={styles.tabs}>
         {tabs.map((tab) => (
           <NavDropdownTab
             key={tab.label}

@@ -16,6 +16,7 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.55) transparent;
   padding: 0.15rem 0 0.35rem;
+  overscroll-behavior-x: contain;
 }
 
 .tabs::-webkit-scrollbar {
