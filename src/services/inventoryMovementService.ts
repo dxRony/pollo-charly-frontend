@@ -1,6 +1,7 @@
 import { apiFetch } from './api'
 import type {
   CreateInventoryMovementPayload,
+  InventoryMovement,
   InventoryMovementFilters,
   InventoryMovementMutationResponse,
   PaginatedInventoryMovements,
@@ -67,3 +68,9 @@ export function rejectAdjustment(
     body: JSON.stringify(payload),
   })
 }
+
+export function getInventoryMovement(id: number): Promise<{ movement: InventoryMovement }> {
+  return apiFetch<{ movement: InventoryMovement }>(`/inventory-movements/${id}`)
+}
+
+

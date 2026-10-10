@@ -49,28 +49,31 @@ export function SupplierFormModal({ initialData, onClose, onSubmit }: SupplierFo
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   function toggleDay(dayId: number) {
-    setSelectedDays((prev) =>
-      prev.includes(dayId) ? prev.filter((id) => id !== dayId) : [...prev, dayId],
-    )
+    setSelectedDays((prev) => {
+      const next = prev.includes(dayId) ? prev.filter((id) => id !== dayId) : [...prev, dayId]
+      if (next.length > 0) {
+        setErrors((errs) => {
+          const updated = { ...errs }
+          delete updated.delivery_day_ids
+          return updated
+        })
+      }
+      return next
+    })
   }
 
   function handleAddSupplyRow() {
     const availableSupply = catalogSupplies.find(
       (s) => !supplyRows.some((row) => row.supply_id === s.id),
     )
-    if (!availableSupply && catalogSupplies.length > 0) {
-      setSupplyRows((prev) => [
-        ...prev,
-        { supply_id: catalogSupplies[0].id, agreed_price: String(catalogSupplies[0].unit_cost ?? '') },
-      ])
+    if (!availableSupply) {
       return
     }
-    if (availableSupply) {
-      setSupplyRows((prev) => [
-        ...prev,
-        { supply_id: availableSupply.id, agreed_price: String(availableSupply.unit_cost ?? '') },
-      ])
-    }
+
+    setSupplyRows((prev) => [
+      ...prev,
+      { supply_id: availableSupply.id, agreed_price: String(availableSupply.unit_cost ?? '') },
+    ])
   }
 
   function handleRemoveSupplyRow(index: number) {
@@ -108,7 +111,17 @@ export function SupplierFormModal({ initialData, onClose, onSubmit }: SupplierFo
       newErrors.email = 'El formato del correo electrónico no es válido.'
     }
 
+    if (selectedDays.length === 0) {
+      newErrors.delivery_day_ids = 'Debe seleccionar al menos un día de entrega.'
+    }
+
+    const seenSupplies = new Set<number>()
     supplyRows.forEach((row, idx) => {
+      if (seenSupplies.has(row.supply_id)) {
+        newErrors[`supply_${idx}`] = 'Este insumo ya fue agregado en la lista.'
+      }
+      seenSupplies.add(row.supply_id)
+
       const price = parseFloat(row.agreed_price)
       if (isNaN(price) || price < 0) {
         newErrors[`supply_${idx}`] = 'El precio acordado debe ser un número mayor o igual a 0.'
@@ -219,7 +232,7 @@ export function SupplierFormModal({ initialData, onClose, onSubmit }: SupplierFo
           />
         </div>
 
-        <div className={styles.sectionTitle}>2. Días de entrega habituales</div>
+        <div className={styles.sectionTitle}>2. Días de entrega habituales *</div>
         <div className={styles.daysGrid}>
           {deliveryDays.map((day) => {
             const isChecked = selectedDays.includes(day.id)
@@ -235,10 +248,19 @@ export function SupplierFormModal({ initialData, onClose, onSubmit }: SupplierFo
             )
           })}
         </div>
+        {errors.delivery_day_ids && (
+          <span className={styles.fieldError}>{errors.delivery_day_ids}</span>
+        )}
 
         <div className={styles.sectionTitle}>
           <span>3. Productos / Insumos y precios acordados</span>
-          <Button type="button" size="sm" onClick={handleAddSupplyRow}>
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleAddSupplyRow}
+            disabled={catalogSupplies.length === 0 || supplyRows.length >= catalogSupplies.length || isSubmitting}
+            title={supplyRows.length >= catalogSupplies.length ? 'Todos los insumos del catálogo ya están agregados' : undefined}
+          >
             + Agregar Insumo
           </Button>
         </div>
@@ -248,50 +270,63 @@ export function SupplierFormModal({ initialData, onClose, onSubmit }: SupplierFo
             No se han asignado insumos para este proveedor. Presiona "+ Agregar Insumo" para registrar los productos que abastece y sus precios pactados.
           </p>
         ) : (
-          <div className={styles.suppliesTable}>
-            {supplyRows.map((row, index) => {
-              const rowError = errors[`supply_${index}`] || errors[`supplies.${index}.agreed_price`]
-              return (
-                <div key={index} className={styles.supplyRow}>
-                  <div className={styles.supplySelectCol}>
-                    <select
-                      className={styles.select}
-                      value={row.supply_id}
-                      onChange={(e) => handleSupplyChange(index, Number(e.target.value))}
-                    >
-                      {catalogSupplies.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} ({s.code}) - {s.measurement_unit?.abbreviation ?? ''}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={styles.supplyPriceCol}>
-                    <div className={styles.priceInputWrapper}>
-                      <span className={styles.currencyPrefix}>Q</span>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        className={styles.inputPrice}
-                        placeholder="Precio acordado"
-                        value={row.agreed_price}
-                        onChange={(e) => handlePriceChange(index, e.target.value)}
-                      />
+          <div>
+            <div className={styles.tableHeaders}>
+              <span className={styles.headerSupplyCol}>Insumo *</span>
+              <span className={styles.headerPriceCol}>Precio acordado (Q) *</span>
+              <span className={styles.headerActionCol}></span>
+            </div>
+            <div className={styles.suppliesTable}>
+              {supplyRows.map((row, index) => {
+                const rowError = errors[`supply_${index}`] || errors[`supplies.${index}.agreed_price`]
+                return (
+                  <div key={index} className={styles.supplyRow}>
+                    <div className={styles.supplySelectCol}>
+                      <select
+                        className={styles.select}
+                        value={row.supply_id}
+                        onChange={(e) => handleSupplyChange(index, Number(e.target.value))}
+                      >
+                        {catalogSupplies.map((s) => {
+                          const isAlreadySelected = supplyRows.some(
+                            (r, i) => i !== index && r.supply_id === s.id,
+                          )
+                          return (
+                            <option key={s.id} value={s.id} disabled={isAlreadySelected}>
+                              {s.name} ({s.code}) - {s.measurement_unit?.abbreviation ?? ''}
+                              {isAlreadySelected ? ' (Ya agregado)' : ''}
+                            </option>
+                          )
+                        })}
+                      </select>
                     </div>
-                    {rowError && <span className={styles.fieldError}>{rowError}</span>}
+                    <div className={styles.supplyPriceCol}>
+                      <div className={styles.priceInputWrapper}>
+                        <span className={styles.currencyPrefix}>Q</span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          className={styles.inputPrice}
+                          placeholder="Precio acordado"
+                          value={row.agreed_price}
+                          onChange={(e) => handlePriceChange(index, e.target.value)}
+                        />
+                      </div>
+                      {rowError && <span className={styles.fieldError}>{rowError}</span>}
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.removeRowBtn}
+                      onClick={() => handleRemoveSupplyRow(index)}
+                      title="Eliminar insumo"
+                    >
+                      🗑️
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className={styles.removeRowBtn}
-                    onClick={() => handleRemoveSupplyRow(index)}
-                    title="Eliminar insumo"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         )}
 

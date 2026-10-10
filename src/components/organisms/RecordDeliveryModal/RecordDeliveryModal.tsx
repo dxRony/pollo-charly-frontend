@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/atoms/Button'
 import { Modal } from '@/components/molecules/Modal'
+import { useActiveSupplies } from '@/hooks/useActiveSupplies'
 import { useDeliveryCatalogs } from '@/hooks/useDeliveryCatalogs'
 import { ApiError } from '@/services/api'
 import * as supplierService from '@/services/supplierService'
@@ -23,25 +24,35 @@ interface ItemRow {
 
 export function RecordDeliveryModal({ supplier, onClose, onSuccess }: RecordDeliveryModalProps) {
   const { incidentTypes } = useDeliveryCatalogs()
+  const { supplies: catalogSupplies } = useActiveSupplies()
   const [hasIncident, setHasIncident] = useState(false)
   const [incidentTypeId, setIncidentTypeId] = useState<number | ''>('')
   const [description, setDescription] = useState('')
   const [notes, setNotes] = useState('')
 
   // Insumos provistos por el proveedor para registrar cantidades
-  const [items, setItems] = useState<ItemRow[]>(
-    supplier.supplies?.map((s) => ({
-      supply_id: s.supply_id,
-      name: s.name,
-      received_quantity: '',
-      unit_price: s.agreed_price,
-      measurement_unit: s.measurement_unit,
-    })) ?? [],
-  )
+  const [items, setItems] = useState<ItemRow[]>(() => {
+    if (supplier.supplies && supplier.supplies.length > 0) {
+      return supplier.supplies.map((s) => ({
+        supply_id: s.supply_id,
+        name: s.name,
+        received_quantity: '',
+        unit_price: Number(s.agreed_price) || 0,
+        measurement_unit: s.measurement_unit || 'ud',
+      }))
+    }
+    return []
+  })
 
+  const [selectedCatalogSupplyId, setSelectedCatalogSupplyId] = useState<number | ''>('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [generalError, setGeneralError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Insumos del catálogo que no están todavía en la lista
+  const availableCatalogSupplies = catalogSupplies.filter(
+    (cs) => !items.some((it) => it.supply_id === cs.id),
+  )
 
   function handleQuantityChange(index: number, value: string) {
     setItems((prev) => {
@@ -49,7 +60,49 @@ export function RecordDeliveryModal({ supplier, onClose, onSuccess }: RecordDeli
       updated[index] = { ...updated[index], received_quantity: value }
       return updated
     })
+    if (parseFloat(value) > 0) {
+      setErrors((prev) => {
+        const copy = { ...prev }
+        delete copy.items
+        delete copy[`item_${index}`]
+        return copy
+      })
+    }
   }
+
+  function handleAddSupplyToDelivery() {
+    if (!selectedCatalogSupplyId) return
+    const cs = catalogSupplies.find((s) => s.id === Number(selectedCatalogSupplyId))
+    if (!cs) return
+    setItems((prev) => [
+      ...prev,
+      {
+        supply_id: cs.id,
+        name: cs.name,
+        received_quantity: '',
+        unit_price: Number(cs.unit_cost) || 0,
+        measurement_unit: cs.measurement_unit?.abbreviation || 'ud',
+      },
+    ])
+    setSelectedCatalogSupplyId('')
+    setErrors((prev) => {
+      const copy = { ...prev }
+      delete copy.items
+      return copy
+    })
+  }
+
+  function handleRemoveItem(index: number) {
+    setItems((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const totalEstimated = items.reduce((sum, it) => {
+    const qty = parseFloat(it.received_quantity)
+    if (!isNaN(qty) && qty > 0) {
+      return sum + qty * it.unit_price
+    }
+    return sum
+  }, 0)
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {}
@@ -64,6 +117,24 @@ export function RecordDeliveryModal({ supplier, onClose, onSuccess }: RecordDeli
         newErrors.description = 'La descripción debe tener al menos 5 caracteres.'
       }
     }
+
+    const hasAtLeastOneItem = items.some((it) => {
+      const q = parseFloat(it.received_quantity)
+      return !isNaN(q) && q > 0
+    })
+
+    if (!hasAtLeastOneItem) {
+      newErrors.items = 'Debe ingresar la cantidad recibida de al menos un producto (mayor a 0).'
+    }
+
+    items.forEach((it, idx) => {
+      if (it.received_quantity.trim() !== '') {
+        const q = parseFloat(it.received_quantity)
+        if (isNaN(q) || q < 0) {
+          newErrors[`item_${idx}`] = 'La cantidad debe ser un valor positivo.'
+        }
+      }
+    })
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -218,31 +289,107 @@ export function RecordDeliveryModal({ supplier, onClose, onSuccess }: RecordDeli
           </div>
         )}
 
-        {/* Insumos recibidos (opcional) */}
-        {items.length > 0 && (
-          <div className={styles.itemsSection}>
-            <div className={styles.itemsTitle}>Cantidades recibidas (opcional):</div>
-            <div className={styles.itemsGrid}>
-              {items.map((it, idx) => (
-                <div key={it.supply_id} className={styles.itemRow}>
-                  <span className={styles.itemName}>{it.name}</span>
-                  <div className={styles.itemQtyWrapper}>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      className={styles.itemInput}
-                      placeholder="0.00"
-                      value={it.received_quantity}
-                      onChange={(e) => handleQuantityChange(idx, e.target.value)}
-                    />
-                    <span className={styles.itemUnit}>{it.measurement_unit}</span>
-                  </div>
-                </div>
-              ))}
+        {/* Insumos recibidos */}
+        <div className={styles.itemsSection}>
+          <div className={styles.itemsHeader}>
+            <div>
+              <div className={styles.itemsTitle}>Productos e insumos recibidos *</div>
+              <div className={styles.itemsSubtitle}>
+                Ingrese las cantidades físicas recibidas de la mercancía.
+              </div>
             </div>
+            {availableCatalogSupplies.length > 0 && (
+              <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                <select
+                  className={styles.select}
+                  style={{ width: 'auto', padding: '0.3rem 0.5rem', fontSize: '0.8rem' }}
+                  value={selectedCatalogSupplyId}
+                  onChange={(e) =>
+                    setSelectedCatalogSupplyId(e.target.value === '' ? '' : Number(e.target.value))
+                  }
+                >
+                  <option value="">+ Seleccionar otro producto...</option>
+                  {availableCatalogSupplies.map((cs) => (
+                    <option key={cs.id} value={cs.id}>
+                      {cs.name} ({cs.measurement_unit?.abbreviation ?? 'ud'}) - Q{Number(cs.unit_cost ?? 0).toFixed(2)}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleAddSupplyToDelivery}
+                  disabled={!selectedCatalogSupplyId}
+                >
+                  Agregar
+                </Button>
+              </div>
+            )}
           </div>
-        )}
+
+          {errors.items && <span className={styles.errorText}>{errors.items}</span>}
+
+          {items.length === 0 ? (
+            <p className={styles.leadText} style={{ fontStyle: 'italic', margin: '0.5rem 0' }}>
+              Este proveedor no tiene insumos predeterminados. Seleccione uno arriba para registrar la recepción.
+            </p>
+          ) : (
+            <>
+              <div className={styles.tableHeader}>
+                <span>Producto</span>
+                <span>P. Unitario</span>
+                <span>Cantidad Recibida *</span>
+                <span style={{ textAlign: 'right' }}>Subtotal</span>
+                <span></span>
+              </div>
+              <div className={styles.itemsGrid}>
+                {items.map((it, idx) => {
+                  const qtyNum = parseFloat(it.received_quantity) || 0
+                  const subtotal = qtyNum * it.unit_price
+                  const itemErr = errors[`item_${idx}`]
+
+                  return (
+                    <div key={it.supply_id} className={styles.itemRow}>
+                      <span className={styles.itemName} title={it.name}>
+                        {it.name}
+                      </span>
+                      <span className={styles.itemPrice}>Q{it.unit_price.toFixed(2)}</span>
+                      <div>
+                        <div className={styles.itemQtyWrapper}>
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            className={styles.itemInput}
+                            placeholder="0.00"
+                            value={it.received_quantity}
+                            onChange={(e) => handleQuantityChange(idx, e.target.value)}
+                          />
+                          <span className={styles.itemUnit}>{it.measurement_unit}</span>
+                        </div>
+                        {itemErr && <span className={styles.errorText}>{itemErr}</span>}
+                      </div>
+                      <span className={styles.itemSubtotal}>Q{subtotal.toFixed(2)}</span>
+                      <button
+                        type="button"
+                        className={styles.removeItemBtn}
+                        onClick={() => handleRemoveItem(idx)}
+                        title="Quitar de esta entrega"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className={styles.totalBanner}>
+                <span className={styles.totalLabel}>Total estimado de la entrega:</span>
+                <span className={styles.totalAmount}>Q{totalEstimated.toFixed(2)}</span>
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Notas adicionales */}
         <div className={styles.fieldGroup}>

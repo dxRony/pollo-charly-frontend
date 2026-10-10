@@ -117,34 +117,74 @@
 .itemsSection {
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 0.75rem 1rem;
-  background-color: var(--color-surface-muted, #f8fafc);
+  padding: 0.85rem 1rem;
+  background-color: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.itemsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .itemsTitle {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.itemsSubtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr auto;
+  gap: 0.5rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-text-muted);
-  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .itemsGrid {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  max-height: 140px;
+  max-height: 220px;
   overflow-y: auto;
 }
 
 .itemRow {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr auto;
+  gap: 0.5rem;
   align-items: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--color-surface-muted, #f8fafc);
   font-size: 0.85rem;
+}
+
+.itemRow:hover {
+  background-color: #f1f5f9;
 }
 
 .itemName {
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemPrice {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
 }
 
 .itemQtyWrapper {
@@ -154,18 +194,66 @@
 }
 
 .itemInput {
-  width: 80px;
-  padding: 0.3rem 0.5rem;
+  width: 75px;
+  padding: 0.35rem 0.4rem;
   border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 0.85rem;
   text-align: right;
+  background-color: #fff;
+}
+
+.itemInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
 }
 
 .itemUnit {
   font-size: 0.8rem;
   color: var(--color-text-muted);
-  min-width: 30px;
+}
+
+.itemSubtotal {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-align: right;
+}
+
+.removeItemBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.removeItemBtn:hover {
+  opacity: 1;
+}
+
+.totalBanner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  background-color: var(--color-surface-muted, #f8fafc);
+  border-radius: 4px;
+}
+
+.totalLabel {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.totalAmount {
+  color: var(--color-primary, #1e40af);
+  font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .actions {
