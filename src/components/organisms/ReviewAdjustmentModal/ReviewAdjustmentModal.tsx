@@ -22,7 +22,9 @@ export function ReviewAdjustmentModal({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const diff = movement.new_stock - movement.previous_stock
+  const prevStock = Number(movement.previous_stock) || 0
+  const nextStock = Number(movement.new_stock) || 0
+  const diff = nextStock - prevStock
   const unit = movement.supply?.measurement_unit?.abbreviation ?? ''
 
   async function handleApproveClick() {
@@ -88,14 +90,14 @@ export function ReviewAdjustmentModal({
           <div className={styles.stockStat}>
             <span className={styles.stockLabel}>Stock anterior</span>
             <span className={styles.stockValue}>
-              {movement.previous_stock.toFixed(2)} {unit}
+              {prevStock.toFixed(2)} {unit}
             </span>
           </div>
 
           <div className={styles.stockStat}>
             <span className={styles.stockLabel}>Stock solicitado</span>
             <span className={styles.stockValue}>
-              {movement.new_stock.toFixed(2)} {unit}
+              {nextStock.toFixed(2)} {unit}
             </span>
           </div>
 

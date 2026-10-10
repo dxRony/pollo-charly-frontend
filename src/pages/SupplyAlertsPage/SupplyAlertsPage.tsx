@@ -141,11 +141,11 @@ export function SupplyAlertsPage() {
         />
       )}
 
-      {alertToReview && alertToReview.inventory_movement_id && (
+      {alertToReview && (
         <ReviewAdjustmentModal
           movement={
             alertToReview.inventory_movement ?? {
-              id: alertToReview.inventory_movement_id,
+              id: alertToReview.inventory_movement_id ?? 0,
               supply_id: alertToReview.supply_id,
               supply: alertToReview.supply,
               inventory_movement_type_id: 4,
@@ -154,9 +154,9 @@ export function SupplyAlertsPage() {
               user_id: alertToReview.user_id ?? 0,
               user: alertToReview.user,
               quantity: 0,
-              previous_stock: alertToReview.supply?.current_stock ?? 0,
-              new_stock: alertToReview.supply?.current_stock ?? 0,
-              reason: alertToReview.notes,
+              previous_stock: Number(alertToReview.supply?.current_stock) || 0,
+              new_stock: Number(alertToReview.supply?.current_stock) || 0,
+              reason: alertToReview.notes ?? 'Solicitud de ajuste de inventario',
               order_id: null,
               order_item_id: null,
               purchase_order_id: null,

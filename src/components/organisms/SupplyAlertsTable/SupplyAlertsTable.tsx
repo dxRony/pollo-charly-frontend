@@ -35,7 +35,12 @@ export function SupplyAlertsTable({
         <tbody>
           {alerts.map((alert) => {
             const isPending = alert.status_name === 'pending'
-            const isAdjustmentAlert = Boolean(alert.inventory_movement_id)
+            const isAdjustmentAlert = Boolean(
+              alert.inventory_movement_id ||
+              alert.inventory_movement ||
+              (alert.origin_name === 'manual' && alert.notes?.toLowerCase().includes('ajuste')) ||
+              alert.notes?.toLowerCase().includes('solicitud de ajuste')
+            )
             const movementStatus = alert.inventory_movement?.adjustment_status?.name
 
             const originLabel = isAdjustmentAlert
@@ -75,15 +80,27 @@ export function SupplyAlertsTable({
                   )}
                 </td>
                 <td className={styles.actions}>
-                  {isPending && isAdjustmentAlert && onReviewAdjustment ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="primary"
-                      onClick={() => onReviewAdjustment(alert)}
-                    >
-                      Revisar solicitud
-                    </Button>
+                  {isAdjustmentAlert ? (
+                    isPending ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="primary"
+                        onClick={() => onReviewAdjustment?.(alert)}
+                      >
+                        Revisar solicitud
+                      </Button>
+                    ) : onReviewAdjustment ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => onReviewAdjustment(alert)}
+                      >
+                        Ver detalle
+                      </Button>
+                    ) : (
+                      '—'
+                    )
                   ) : isPending ? (
                     <Button type="button" size="sm" variant="primary" onClick={() => onAttend(alert)}>
                       Atender

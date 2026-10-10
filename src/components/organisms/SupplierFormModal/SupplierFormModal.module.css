@@ -46,6 +46,27 @@
   font-weight: 600;
 }
 
+.tableHeaders {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 0 0.1rem;
+}
+
+.headerSupplyCol {
+  flex: 3;
+}
+
+.headerPriceCol {
+  flex: 2;
+}
+
+.headerActionCol {
+  width: 1.8rem;
+}
+
 .suppliesTable {
   display: flex;
   flex-direction: column;

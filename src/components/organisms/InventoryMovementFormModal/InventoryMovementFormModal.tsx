@@ -84,7 +84,7 @@ export function InventoryMovementFormModal({
       <form className={styles.form} onSubmit={handleSubmit}>
         <SelectField
           id="supply_id"
-          label="Insumo"
+          label="Insumo *"
           value={supplyId}
           onChange={(event) => setSupplyId(event.target.value === '' ? '' : Number(event.target.value))}
           required
@@ -98,7 +98,7 @@ export function InventoryMovementFormModal({
         </SelectField>
         <SelectField
           id="type"
-          label="Tipo de movimiento"
+          label="Tipo de movimiento *"
           value={type}
           onChange={(event) => setType(event.target.value as InventoryMovementTypeAlias)}
           required
@@ -115,7 +115,7 @@ export function InventoryMovementFormModal({
         {isAjuste ? (
           <FormField
             id="new_stock"
-            label="Existencia corregida"
+            label="Existencia corregida *"
             type="number"
             step="0.01"
             min="0"
@@ -126,7 +126,7 @@ export function InventoryMovementFormModal({
         ) : (
           <FormField
             id="quantity"
-            label="Cantidad"
+            label="Cantidad *"
             type="number"
             step="0.01"
             min="0.01"
@@ -137,7 +137,7 @@ export function InventoryMovementFormModal({
         )}
         <TextareaField
           id="reason"
-          label={reasonRequired ? 'Motivo' : 'Motivo (opcional)'}
+          label={reasonRequired ? 'Motivo *' : 'Motivo (opcional)'}
           value={reason}
           onChange={(event) => setReason(event.target.value)}
           rows={3}
