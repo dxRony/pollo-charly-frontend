@@ -11,20 +11,22 @@
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--color-text);
-  cursor: default;
-  text-decoration: none;
-}
-
-a.tab {
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.15s ease;
 }
 
-a.tab:hover {
+.tab:hover {
   background: var(--color-accent-dark);
 }
 
-a.tab.active {
+.tab:focus-visible {
+  outline: 3px solid var(--color-text-inverse);
+  outline-offset: 2px;
+}
+
+.active,
+.active:hover {
   background: var(--color-text);
   color: var(--color-accent);
 }
@@ -41,7 +43,8 @@ a.tab.active {
   flex: 0 0 1.55rem;
 }
 
-.arrow {
-  font-size: 0.6rem;
-  opacity: 0.7;
+@media (max-width: 900px) {
+  .tab {
+    width: 100%;
+  }
 }
