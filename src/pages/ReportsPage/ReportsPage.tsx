@@ -5,6 +5,12 @@ import { ExportButtons } from '@/components/molecules/ExportButtons'
 import { KpiCard } from '@/components/molecules/KpiCard'
 import { DashboardMetricsPanel } from '@/components/organisms/DashboardMetricsPanel'
 import { ReportDataTable } from '@/components/organisms/ReportDataTable'
+import { SalesReportCharts } from '@/components/organisms/SalesReportCharts'
+import { TopDishesReportCharts } from '@/components/organisms/TopDishesReportCharts'
+import { InventoryMovementsReportCharts } from '@/components/organisms/InventoryMovementsReportCharts'
+import { SupplyAlertsReportCharts } from '@/components/organisms/SupplyAlertsReportCharts'
+import { InventoryWasteReportCharts } from '@/components/organisms/InventoryWasteReportCharts'
+import { SupplierPurchasesReportCharts } from '@/components/organisms/SupplierPurchasesReportCharts'
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics'
 import { useSalesReport } from '@/hooks/useSalesReport'
 import { useTopDishesReport } from '@/hooks/useTopDishesReport'
@@ -173,6 +179,12 @@ export function ReportsPage() {
                 <KpiCard label="Ticket promedio" value={money(sales.report.summary.average_ticket)} />
               </div>
 
+              <SalesReportCharts
+                rows={sales.report.rows}
+                dateFrom={sales.filters.date_from}
+                dateTo={sales.filters.date_to}
+              />
+
               <ReportDataTable
                 columns={[
                   'N° Comprobante',
@@ -240,15 +252,19 @@ export function ReportsPage() {
           {topDishes.error && <p className={styles.error}>{topDishes.error}</p>}
 
           {topDishes.report && (
-            <ReportDataTable
-              columns={['Platillo', 'Categoría', 'Cantidad vendida', 'Ingresos generados']}
-              rows={topDishes.report.rows.map((row) => [
-                row.dish_name,
-                row.category_name,
-                row.quantity_sold,
-                money(row.revenue),
-              ])}
-            />
+            <>
+              <TopDishesReportCharts rows={topDishes.report.rows} />
+
+              <ReportDataTable
+                columns={['Platillo', 'Categoría', 'Cantidad vendida', 'Ingresos generados']}
+                rows={topDishes.report.rows.map((row) => [
+                  row.dish_name,
+                  row.category_name,
+                  row.quantity_sold,
+                  money(row.revenue),
+                ])}
+              />
+            </>
           )}
         </section>
       )}
@@ -287,28 +303,36 @@ export function ReportsPage() {
           {movements.error && <p className={styles.error}>{movements.error}</p>}
 
           {movements.report && (
-            <ReportDataTable
-              columns={[
-                'Fecha',
-                'Insumo',
-                'Tipo',
-                'Cantidad',
-                'Existencia previa',
-                'Existencia nueva',
-                'Usuario',
-                'Motivo',
-              ]}
-              rows={movements.report.rows.map((row) => [
-                row.date,
-                row.supply_name,
-                row.type ? (MOVEMENT_TYPE_LABELS[row.type] ?? row.type) : '—',
-                row.quantity,
-                row.previous_stock,
-                row.new_stock,
-                row.user_name,
-                row.reason,
-              ])}
-            />
+            <>
+              <InventoryMovementsReportCharts
+                rows={movements.report.rows}
+                dateFrom={movements.filters.date_from}
+                dateTo={movements.filters.date_to}
+              />
+
+              <ReportDataTable
+                columns={[
+                  'Fecha',
+                  'Insumo',
+                  'Tipo',
+                  'Cantidad',
+                  'Existencia previa',
+                  'Existencia nueva',
+                  'Usuario',
+                  'Motivo',
+                ]}
+                rows={movements.report.rows.map((row) => [
+                  row.date,
+                  row.supply_name,
+                  row.type ? (MOVEMENT_TYPE_LABELS[row.type] ?? row.type) : '—',
+                  row.quantity,
+                  row.previous_stock,
+                  row.new_stock,
+                  row.user_name,
+                  row.reason,
+                ])}
+              />
+            </>
           )}
         </section>
       )}
@@ -352,17 +376,25 @@ export function ReportsPage() {
           {alerts.error && <p className={styles.error}>{alerts.error}</p>}
 
           {alerts.report && (
-            <ReportDataTable
-              columns={['Fecha', 'Insumo', 'Origen', 'Estado', 'Usuario', 'Notas']}
-              rows={alerts.report.rows.map((row) => [
-                row.date,
-                row.supply_name,
-                row.origin ? (ALERT_ORIGIN_LABELS[row.origin] ?? row.origin) : '—',
-                row.status ? (ALERT_STATUS_LABELS[row.status] ?? row.status) : '—',
-                row.user_name,
-                row.notes,
-              ])}
-            />
+            <>
+              <SupplyAlertsReportCharts
+                rows={alerts.report.rows}
+                dateFrom={alerts.filters.date_from}
+                dateTo={alerts.filters.date_to}
+              />
+
+              <ReportDataTable
+                columns={['Fecha', 'Insumo', 'Origen', 'Estado', 'Usuario', 'Notas']}
+                rows={alerts.report.rows.map((row) => [
+                  row.date,
+                  row.supply_name,
+                  row.origin ? (ALERT_ORIGIN_LABELS[row.origin] ?? row.origin) : '—',
+                  row.status ? (ALERT_STATUS_LABELS[row.status] ?? row.status) : '—',
+                  row.user_name,
+                  row.notes,
+                ])}
+              />
+            </>
           )}
         </section>
       )}
@@ -431,6 +463,12 @@ export function ReportsPage() {
                   value={waste.report.summary.top_wasted_supply ?? 'Ninguno'}
                 />
               </div>
+
+              <InventoryWasteReportCharts
+                report={waste.report}
+                dateFrom={waste.filters.date_from}
+                dateTo={waste.filters.date_to}
+              />
 
               <ReportDataTable
                 columns={[
@@ -535,6 +573,8 @@ export function ReportsPage() {
                   value={`${purchases.report.summary.fulfillment_rate}%`}
                 />
               </div>
+
+              <SupplierPurchasesReportCharts report={purchases.report} />
 
               <ReportDataTable
                 columns={[

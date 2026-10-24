@@ -1,0 +1,1 @@
+export { SalesByPaymentMethodChart } from './SalesByPaymentMethodChart'

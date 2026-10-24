@@ -1,0 +1,5 @@
+.message {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 3rem 1rem;
+}

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics'
 import { KpiCard } from '@/components/molecules/KpiCard'
-import { BarChart } from '@/components/molecules/BarChart'
+import { DashboardChartsGrid } from '@/components/organisms/DashboardChartsGrid'
 import { Button } from '@/components/atoms/Button'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { DashboardHero } from '../DashboardHero/DashboardHero'
@@ -35,7 +35,7 @@ export function AdminDashboard() {
     )
   }
 
-  const { kpis, sales_by_day, top_dishes } = metrics
+  const { kpis } = metrics
 
   return (
     <div className={styles.container}>
@@ -91,34 +91,7 @@ export function AdminDashboard() {
 
       <section aria-label="Gráficas del sistema">
         <h2 className={styles.sectionTitle}>📈 Gráficas de Rendimiento</h2>
-        <div className={styles.chartsGrid}>
-          <div className={styles.chartCard}>
-            <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>📅 Ventas por Día</h3>
-              <span className={styles.chartSubtitle}>Últimos registros</span>
-            </div>
-            <BarChart
-              data={sales_by_day.map((point) => ({ label: point.date, value: point.total }))}
-              valueFormatter={formatCurrency}
-              emptyMessage="No hay registros de ventas en este periodo."
-            />
-          </div>
-
-          <div className={styles.chartCard}>
-            <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>🍗 Platillos Más Vendidos</h3>
-              <span className={styles.chartSubtitle}>Por unidades despachadas</span>
-            </div>
-            <BarChart
-              data={top_dishes.map((dish) => ({
-                label: dish.dish_name,
-                value: dish.quantity_sold,
-              }))}
-              valueFormatter={(val) => `${val} und.`}
-              emptyMessage="No hay registro de platillos vendidos."
-            />
-          </div>
-        </div>
+        <DashboardChartsGrid metrics={metrics} />
       </section>
     </div>
   )

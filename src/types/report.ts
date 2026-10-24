@@ -14,6 +14,12 @@ export interface SalesByDayPoint {
   count: number
 }
 
+export interface SalesByPaymentMethodPoint {
+  payment_method: string
+  total: number
+  count: number
+}
+
 export interface TopDishRow {
   dish_id: number
   dish_name: string
@@ -26,6 +32,7 @@ export interface DashboardMetrics {
   period: { date_from: string; date_to: string }
   kpis: DashboardKpis
   sales_by_day: SalesByDayPoint[]
+  sales_by_payment_method: SalesByPaymentMethodPoint[]
   top_dishes: TopDishRow[]
 }
 

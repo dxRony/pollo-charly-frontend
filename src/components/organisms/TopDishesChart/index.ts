@@ -1,0 +1,1 @@
+export { TopDishesChart } from './TopDishesChart'
