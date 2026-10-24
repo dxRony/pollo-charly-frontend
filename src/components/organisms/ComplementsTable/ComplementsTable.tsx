@@ -49,13 +49,15 @@ export function ComplementsTable({ complements, onEdit, onToggleStatus }: Comple
                   {complement.is_active ? 'Activo' : 'Inactivo'}
                 </Badge>
               </td>
-              <td className={styles.actions}>
-                <Button type="button" size="sm" onClick={() => onEdit(complement)}>
-                  Editar
-                </Button>
-                <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(complement)}>
-                  {complement.is_active ? 'Desactivar' : 'Activar'}
-                </Button>
+              <td>
+                <div className={styles.actions}>
+                  <Button type="button" size="sm" onClick={() => onEdit(complement)}>
+                    Editar
+                  </Button>
+                  <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(complement)}>
+                    {complement.is_active ? 'Desactivar' : 'Activar'}
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

@@ -71,22 +71,24 @@ export function OrdersTable({ orders, onCancel, onModify, onRegisterSale }: Orde
                 </Badge>
               </td>
               <td>{new Date(order.created_at).toLocaleString()}</td>
-              <td className={styles.actions}>
-                {order.order_status === 'lista' && (
-                  <Button type="button" size="sm" variant="primary" onClick={() => onRegisterSale(order)}>
-                    Cobrar
-                  </Button>
-                )}
-                {canModify(order) && (
-                  <Button type="button" size="sm" onClick={() => onModify(order)}>
-                    Modificar
-                  </Button>
-                )}
-                {order.order_status === 'pendiente' && (
-                  <Button type="button" size="sm" onClick={() => onCancel(order)}>
-                    Cancelar
-                  </Button>
-                )}
+              <td>
+                <div className={styles.actions}>
+                  {order.order_status === 'lista' && (
+                    <Button type="button" size="sm" variant="primary" onClick={() => onRegisterSale(order)}>
+                      Cobrar
+                    </Button>
+                  )}
+                  {canModify(order) && (
+                    <Button type="button" size="sm" onClick={() => onModify(order)}>
+                      Modificar
+                    </Button>
+                  )}
+                  {order.order_status === 'pendiente' && (
+                    <Button type="button" size="sm" onClick={() => onCancel(order)}>
+                      Cancelar
+                    </Button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}

@@ -9,7 +9,6 @@
 .table {
   width: 100%;
   min-width: 900px;
-  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
 }
@@ -27,58 +26,19 @@
   border-bottom: 1px solid rgba(26, 26, 26, 0.1);
   font-size: 0.9rem;
   white-space: nowrap;
+  max-width: 16rem;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 16%;
-}
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 16%;
-}
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-  width: 11%;
-}
-
-.table th:nth-child(4),
-.table td:nth-child(4) {
-  width: 24%;
-}
-
-.table th:nth-child(5),
-.table td:nth-child(5) {
-  width: 14%;
-}
-
-.table th:nth-child(6),
-.table td:nth-child(6) {
-  width: 10%;
-}
-
-.table th:nth-child(7),
-.table td:nth-child(7) {
-  width: 9%;
 }
 
 .table tr:last-child td {
   border-bottom: none;
 }
 
-.notesCell {
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+.table td.notesCell {
+  width: 100%;
+  max-width: 0;
   color: var(--color-text-muted);
-}
-
-.actions {
-  vertical-align: middle;
 }
 
 .empty {
