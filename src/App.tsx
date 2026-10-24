@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthProvider'
 import { ProtectedRoute } from '@/routes/ProtectedRoute'
@@ -19,9 +20,12 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { RestaurantTablesPage } from '@/pages/RestaurantTablesPage'
 import { OrdersPage } from '@/pages/OrdersPage'
 import { KitchenPage } from '@/pages/KitchenPage'
-import { ReportsPage } from '@/pages/ReportsPage'
+import { LoadingMessage } from '@/components/atoms/LoadingMessage'
 import { SuppliersPage } from '@/pages/SuppliersPage'
 import { PurchasesPage } from '@/pages/PurchasesPage'
+
+// Reportes concentra las gráficas (Recharts): se carga bajo demanda para no pesar en el resto de la app.
+const ReportsPage = lazy(() => import('@/pages/ReportsPage').then((module) => ({ default: module.ReportsPage })))
 
 function App() {
   return (
@@ -55,7 +59,14 @@ function App() {
             <Route path="complements" element={<ComplementsPage />} />
             <Route path="suppliers" element={<SuppliersPage />} />
             <Route path="purchases" element={<PurchasesPage />} />
-            <Route path="reports" element={<ReportsPage />} />
+            <Route
+              path="reports"
+              element={
+                <Suspense fallback={<LoadingMessage message="Cargando reportes..." />}>
+                  <ReportsPage />
+                </Suspense>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
