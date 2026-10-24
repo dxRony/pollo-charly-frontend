@@ -38,16 +38,18 @@ export function UsersTable({ users, onEdit, onToggleStatus, onResetPassword }: U
                   {user.is_active ? 'Activo' : 'Inactivo'}
                 </Badge>
               </td>
-              <td className={styles.actions}>
-                <Button type="button" size="sm" onClick={() => onEdit(user)}>
-                  Editar
-                </Button>
-                <Button type="button" size="sm" onClick={() => onResetPassword(user)}>
-                  Restablecer contraseña
-                </Button>
-                <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(user)}>
-                  {user.is_active ? 'Desactivar' : 'Activar'}
-                </Button>
+              <td>
+                <div className={styles.actions}>
+                  <Button type="button" size="sm" onClick={() => onEdit(user)}>
+                    Editar
+                  </Button>
+                  <Button type="button" size="sm" onClick={() => onResetPassword(user)}>
+                    Restablecer contraseña
+                  </Button>
+                  <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(user)}>
+                    {user.is_active ? 'Desactivar' : 'Activar'}
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

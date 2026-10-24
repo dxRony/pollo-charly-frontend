@@ -35,9 +35,11 @@ export function SuppliesTable({ supplies, onEdit, onToggleStatus }: SuppliesTabl
               <td>{supply.code}</td>
               <td>{supply.name}</td>
               <td>{supply.measurement_unit?.abbreviation ?? '—'}</td>
-              <td className={styles.stockCell}>
-                {supply.current_stock.toFixed(2)}
-                {supply.is_low_stock && <Badge tone="warning">Bajo stock</Badge>}
+              <td>
+                <div className={styles.stockCell}>
+                  {supply.current_stock.toFixed(2)}
+                  {supply.is_low_stock && <Badge tone="warning">Bajo stock</Badge>}
+                </div>
               </td>
               <td>{supply.minimum_stock.toFixed(2)}</td>
               <td>{supply.unit_cost.toFixed(2)}</td>
@@ -46,18 +48,20 @@ export function SuppliesTable({ supplies, onEdit, onToggleStatus }: SuppliesTabl
                   {supply.is_active ? 'Activo' : 'Inactivo'}
                 </Badge>
               </td>
-              <td className={styles.actions}>
-                <Button type="button" size="sm" onClick={() => onEdit(supply)}>
-                  Editar
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="primary"
-                  onClick={() => onToggleStatus(supply)}
-                >
-                  {supply.is_active ? 'Desactivar' : 'Activar'}
-                </Button>
+              <td>
+                <div className={styles.actions}>
+                  <Button type="button" size="sm" onClick={() => onEdit(supply)}>
+                    Editar
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="primary"
+                    onClick={() => onToggleStatus(supply)}
+                  >
+                    {supply.is_active ? 'Desactivar' : 'Activar'}
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

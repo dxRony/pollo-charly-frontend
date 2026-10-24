@@ -48,13 +48,15 @@ export function RestaurantTablesTable({ tables, onEdit, onToggleStatus }: Restau
                     {TABLE_STATUS_LABELS[table.status_name] ?? table.status_name}
                   </Badge>
                 </td>
-                <td className={styles.actions}>
-                  <Button type="button" size="sm" onClick={() => onEdit(table)}>
-                    Editar
-                  </Button>
-                  <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(table)}>
-                    {isInactive ? 'Activar' : 'Desactivar'}
-                  </Button>
+                <td>
+                  <div className={styles.actions}>
+                    <Button type="button" size="sm" onClick={() => onEdit(table)}>
+                      Editar
+                    </Button>
+                    <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(table)}>
+                      {isInactive ? 'Activar' : 'Desactivar'}
+                    </Button>
+                  </div>
                 </td>
               </tr>
             )
