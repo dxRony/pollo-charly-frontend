@@ -1,0 +1,46 @@
+.tooltip {
+  background: var(--color-bg);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.8rem;
+  min-width: 140px;
+}
+
+.heading {
+  margin: 0 0 0.4rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.key {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.value {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.name {
+  color: var(--color-text-muted);
+}
