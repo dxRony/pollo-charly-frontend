@@ -1,0 +1,116 @@
+.group {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.trigger {
+  composes: tab from '../NavTab/NavTab.module.css';
+}
+
+/* Mayor especificidad que .tab (hoja de NavTab) para que el estado activo no dependa del orden de carga. */
+.trigger.active,
+.trigger.active:hover {
+  background: var(--color-text);
+  color: var(--color-accent);
+}
+
+.icon {
+  composes: icon from '../NavTab/NavTab.module.css';
+}
+
+.arrow {
+  font-size: 0.8rem;
+  opacity: 0.75;
+  transition: transform 0.15s ease;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 60;
+  min-width: 15rem;
+  margin: 0;
+  padding: 0.4rem;
+  list-style: none;
+  background: var(--color-bg);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.link:hover,
+.link:focus-visible {
+  background: var(--color-surface);
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: -3px;
+}
+
+.linkActive,
+.linkActive:hover {
+  background: var(--color-accent);
+}
+
+.linkIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  flex: 0 0 1.55rem;
+  background: var(--color-surface);
+  border-radius: 50%;
+  font-size: 0.95rem;
+}
+
+.linkActive .linkIcon {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* En el menú lateral (pantallas angostas) el grupo es un acordeón: el panel va en el flujo, sin flotar. */
+@media (max-width: 900px) {
+  .group {
+    width: 100%;
+  }
+
+  .trigger {
+    width: 100%;
+  }
+
+  .arrow {
+    margin-left: auto;
+  }
+
+  .panel {
+    position: static;
+    min-width: 0;
+    margin-top: 0.4rem;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

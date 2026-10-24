@@ -1,0 +1,1 @@
+export { SuppliersTable } from './SuppliersTable'

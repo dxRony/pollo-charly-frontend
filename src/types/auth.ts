@@ -59,3 +59,14 @@ export interface ChangePasswordPayload {
   password: string
   password_confirmation: string
 }
+
+export interface UpdateProfilePayload {
+  name: string
+  email: string
+}
+
+export interface UpdateProfileResponse {
+  message: string
+  data: User
+}
+

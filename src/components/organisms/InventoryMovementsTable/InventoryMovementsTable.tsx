@@ -9,8 +9,8 @@ import styles from './InventoryMovementsTable.module.css'
 
 interface InventoryMovementsTableProps {
   movements: InventoryMovement[]
-  onApprove: (movement: InventoryMovement) => void
-  onReject: (movement: InventoryMovement) => void
+  onReviewAdjustment?: (movement: InventoryMovement) => void
+  canReview?: boolean
 }
 
 function statusTone(statusName: string): 'success' | 'neutral' | 'warning' {
@@ -23,7 +23,11 @@ function statusTone(statusName: string): 'success' | 'neutral' | 'warning' {
   return 'neutral'
 }
 
-export function InventoryMovementsTable({ movements, onApprove, onReject }: InventoryMovementsTableProps) {
+export function InventoryMovementsTable({
+  movements,
+  onReviewAdjustment,
+  canReview = false,
+}: InventoryMovementsTableProps) {
   if (movements.length === 0) {
     return <p className={styles.empty}>No se encontraron movimientos con los filtros seleccionados.</p>
   }
@@ -70,16 +74,22 @@ export function InventoryMovementsTable({ movements, onApprove, onReject }: Inve
                   )}
                 </td>
                 <td className={styles.actions}>
-                  {isPendingAdjustment && (
-                    <>
-                      <Button type="button" size="sm" variant="primary" onClick={() => onApprove(movement)}>
-                        Aprobar
-                      </Button>
-                      <Button type="button" size="sm" onClick={() => onReject(movement)}>
-                        Rechazar
-                      </Button>
-                    </>
+                  {isPendingAdjustment && canReview && onReviewAdjustment && (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="primary"
+                      onClick={() => onReviewAdjustment(movement)}
+                    >
+                      Revisar solicitud
+                    </Button>
                   )}
+                  {isPendingAdjustment && !canReview && (
+                    <span style={{ fontSize: '0.8125rem', color: '#6b7280', fontStyle: 'italic' }}>
+                      En espera de aprobación
+                    </span>
+                  )}
+                  {!isPendingAdjustment && '—'}
                 </td>
               </tr>
             )

@@ -1,0 +1,266 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.leadText {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.alertDanger {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.incidentSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radioOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  background-color: var(--color-surface);
+  transition: all 0.2s ease;
+}
+
+.radioOption input {
+  margin-top: 0.25rem;
+}
+
+.radioTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.radioDesc {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+  line-height: 1.3;
+}
+
+.radioOptionSuccess {
+  border-color: var(--color-success, #22c55e);
+  background-color: #f0fdf4;
+}
+
+.radioOptionDanger {
+  border-color: var(--color-danger, #ef4444);
+  background-color: #fef2f2;
+}
+
+.incidentDetailsBox {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.select,
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: var(--color-surface);
+}
+
+.select:focus,
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #3b82f6);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: var(--color-danger, #ef4444);
+  font-weight: 500;
+}
+
+.itemsSection {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background-color: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.itemsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemsTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.itemsSubtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr auto;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.itemsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  background-color: var(--color-surface-muted, #f8fafc);
+  font-size: 0.85rem;
+}
+
+.itemRow:hover {
+  background-color: #f1f5f9;
+}
+
+.itemName {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemPrice {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.itemQtyWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.itemInput {
+  width: 75px;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: right;
+  background-color: #fff;
+}
+
+.itemInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.itemUnit {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.itemSubtotal {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-align: right;
+}
+
+.removeItemBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.removeItemBtn:hover {
+  opacity: 1;
+}
+
+.totalBanner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  background-color: var(--color-surface-muted, #f8fafc);
+  border-radius: 4px;
+}
+
+.totalLabel {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.totalAmount {
+  color: var(--color-primary, #1e40af);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.75rem;
+}

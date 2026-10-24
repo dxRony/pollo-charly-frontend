@@ -1,3 +1,4 @@
+import type { InventoryMovement } from './inventoryMovement'
 import type { Supply } from './supply'
 
 export type SupplyAlertOriginAlias = 'manual' | 'automatic'
@@ -23,6 +24,8 @@ export interface SupplyAlert {
   user_id: number | null
   user: SupplyAlertUserRef | null
   purchase_request_id: number | null
+  inventory_movement_id: number | null
+  inventory_movement?: InventoryMovement | null
   notes: string | null
   created_at: string
 }

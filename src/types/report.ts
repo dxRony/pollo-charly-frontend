@@ -117,4 +117,103 @@ export interface SupplyAlertsReportFilters {
   supply_id?: number
 }
 
+export interface InventoryWasteReportRow {
+  id: number
+  date: string
+  supply_id: number
+  supply_name: string
+  unit: string
+  type: string
+  quantity: number
+  previous_stock: number
+  new_stock: number
+  unit_cost: number
+  total_cost: number
+  user_name: string
+  approver_name: string | null
+  reason: string | null
+}
+
+export interface InventoryWasteSupplySummary {
+  supply_name: string
+  unit: string
+  total_quantity: number
+  total_cost: number
+  records_count: number
+}
+
+export interface InventoryWasteSummary {
+  total_loss_cost: number
+  total_quantity: number
+  records_count: number
+  top_wasted_supply: string | null
+}
+
+export interface InventoryWasteReport {
+  filters: Record<string, unknown>
+  summary: InventoryWasteSummary
+  by_supply: InventoryWasteSupplySummary[]
+  rows: InventoryWasteReportRow[]
+}
+
+export interface InventoryWasteReportFilters {
+  date_from?: string
+  date_to?: string
+  supply_id?: number
+  user_id?: number
+}
+
+export interface SupplierPurchasesReportRow {
+  id: number
+  code: string
+  date: string
+  supplier_id: number
+  supplier_name: string
+  status: string | null
+  status_label: string
+  expected_date: string
+  received_date: string
+  punctuality: string
+  items_count: number
+  total: number
+  incidents_count: number
+  incidents_summary: string
+}
+
+export interface SupplierPerformanceSummary {
+  supplier_id: number
+  supplier_name: string
+  orders_count: number
+  total_spent: number
+  completed_count: number
+  incident_count: number
+  total_incidents: number
+  fulfillment_rate: number
+  punctuality_rate: number
+}
+
+export interface SupplierPurchasesSummary {
+  total_purchases_amount: number
+  orders_count: number
+  completed_orders_count: number
+  incident_orders_count: number
+  total_incidents: number
+  fulfillment_rate: number
+  top_supplier: string | null
+}
+
+export interface SupplierPurchasesReport {
+  filters: Record<string, unknown>
+  summary: SupplierPurchasesSummary
+  by_supplier: SupplierPerformanceSummary[]
+  rows: SupplierPurchasesReportRow[]
+}
+
+export interface SupplierPurchasesReportFilters {
+  date_from?: string
+  date_to?: string
+  supplier_id?: number
+  status?: string
+}
+
 export type ReportExportFormat = 'pdf' | 'xlsx'

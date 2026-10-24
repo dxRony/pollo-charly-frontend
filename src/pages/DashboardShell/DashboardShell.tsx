@@ -4,22 +4,50 @@ import type { DashboardTab } from '@/components/organisms/DashboardNavBar'
 import { useAuth } from '@/hooks/useAuth'
 
 const ADMIN_TABS: DashboardTab[] = [
-  { label: 'Usuarios', icon: '👥', to: '/dashboard/users' },
-  { label: 'Platillos', icon: '🍗', to: '/dashboard/dishes' },
-  { label: 'Menú del día', icon: '📅', to: '/dashboard/daily-menu' },
-  { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
-  { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
-  { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
-  { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
-  { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
-  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
-  { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
+  {
+    label: 'Operación',
+    icon: '🍽️',
+    items: [
+      { label: 'Mesas', icon: '🪑', to: '/dashboard/restaurant-tables' },
+      { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
+      { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
+    ],
+  },
+  {
+    label: 'Menú',
+    icon: '🍗',
+    items: [
+      { label: 'Platillos', icon: '🍗', to: '/dashboard/dishes' },
+      { label: 'Menú del día', icon: '📅', to: '/dashboard/daily-menu' },
+      { label: 'Complementos', icon: '🥗', to: '/dashboard/complements' },
+    ],
+  },
+  {
+    label: 'Inventario',
+    icon: '📦',
+    items: [
+      { label: 'Insumos', icon: '📦', to: '/dashboard/supplies' },
+      { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
+      { label: 'Alertas', icon: '⚠️', to: '/dashboard/supply-alerts' },
+      { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
+      { label: 'Compras', icon: '🛒', to: '/dashboard/purchases' },
+    ],
+  },
   { label: 'Reportes', icon: '📊', to: '/dashboard/reports' },
+  { label: 'Usuarios', icon: '👥', to: '/dashboard/users' },
 ]
 
-const MESERO_TABS: DashboardTab[] = [{ label: 'Comandas', icon: '🧾', to: '/dashboard/orders' }]
+const MESERO_TABS: DashboardTab[] = [
+  { label: 'Comandas', icon: '🧾', to: '/dashboard/orders' },
+  { label: 'Recepción Compras', icon: '🛒', to: '/dashboard/purchases' },
+  { label: 'Proveedores', icon: '🚚', to: '/dashboard/suppliers' },
+  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
+]
 
-const COCINERO_TABS: DashboardTab[] = [{ label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' }]
+const COCINERO_TABS: DashboardTab[] = [
+  { label: 'Cocina', icon: '👨‍🍳', to: '/dashboard/kitchen' },
+  { label: 'Movimientos', icon: '🔄', to: '/dashboard/inventory-movements' },
+]
 
 const TABS_BY_ROLE: Record<string, DashboardTab[]> = {
   Administrador: ADMIN_TABS,

@@ -1,5 +1,8 @@
 import { useAuth } from '@/hooks/useAuth'
-import styles from './DashboardHomePage.module.css'
+import { AdminDashboard } from './components/AdminDashboard/AdminDashboard'
+import { WaiterCashierDashboard } from './components/WaiterCashierDashboard/WaiterCashierDashboard'
+import { CookDashboard } from './components/CookDashboard/CookDashboard'
+import { DashboardHero } from './components/DashboardHero/DashboardHero'
 
 export function DashboardHomePage() {
   const { user } = useAuth()
@@ -10,9 +13,23 @@ export function DashboardHomePage() {
 
   const roleName = user.role?.name ?? 'Usuario'
 
+  if (roleName === 'Administrador') {
+    return <AdminDashboard />
+  }
+
+  if (roleName === 'Mesero/Cajero') {
+    return <WaiterCashierDashboard />
+  }
+
+  if (roleName === 'Cocinero') {
+    return <CookDashboard />
+  }
+
   return (
-    <h1 className={styles.welcome}>
-      Bienvenido {roleName} {user.name}
-    </h1>
+    <DashboardHero
+      userName={user.name}
+      roleName={roleName}
+      subtitle="Bienvenido al panel general de Pollo Charly."
+    />
   )
 }

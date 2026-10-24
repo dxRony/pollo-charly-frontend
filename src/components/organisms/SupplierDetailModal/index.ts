@@ -1,0 +1,1 @@
+export { SupplierDetailModal } from './SupplierDetailModal'

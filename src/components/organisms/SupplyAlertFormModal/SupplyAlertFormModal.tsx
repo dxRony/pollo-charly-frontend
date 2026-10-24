@@ -49,7 +49,7 @@ export function SupplyAlertFormModal({ availableSupplies, onClose, onSubmit }: S
       <form className={styles.form} onSubmit={handleSubmit}>
         <SelectField
           id="supply_id"
-          label="Insumo"
+          label="Insumo *"
           value={supplyId}
           onChange={(event) => setSupplyId(event.target.value === '' ? '' : Number(event.target.value))}
           required

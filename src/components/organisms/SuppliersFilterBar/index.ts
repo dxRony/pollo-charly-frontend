@@ -1,0 +1,1 @@
+export { SuppliersFilterBar } from './SuppliersFilterBar'

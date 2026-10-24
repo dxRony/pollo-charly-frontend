@@ -4,9 +4,13 @@ import type {
   DashboardMetrics,
   InventoryMovementsReport,
   InventoryMovementsReportFilters,
+  InventoryWasteReport,
+  InventoryWasteReportFilters,
   ReportExportFormat,
   SalesReport,
   SalesReportFilters,
+  SupplierPurchasesReport,
+  SupplierPurchasesReportFilters,
   SupplyAlertsReport,
   SupplyAlertsReportFilters,
   TopDishesReport,
@@ -46,8 +50,26 @@ export function getSupplyAlertsReport(filters: SupplyAlertsReportFilters): Promi
   return apiFetch<SupplyAlertsReport>(`/reports/supply-alerts${toQuery(filters)}`)
 }
 
+export function getInventoryWasteReport(
+  filters: InventoryWasteReportFilters,
+): Promise<InventoryWasteReport> {
+  return apiFetch<InventoryWasteReport>(`/reports/inventory-waste${toQuery(filters)}`)
+}
+
+export function getSupplierPurchasesReport(
+  filters: SupplierPurchasesReportFilters,
+): Promise<SupplierPurchasesReport> {
+  return apiFetch<SupplierPurchasesReport>(`/reports/supplier-purchases${toQuery(filters)}`)
+}
+
 export function exportReport<T extends object>(
-  reportPath: 'sales' | 'top-dishes' | 'inventory-movements' | 'supply-alerts',
+  reportPath:
+    | 'sales'
+    | 'top-dishes'
+    | 'inventory-movements'
+    | 'supply-alerts'
+    | 'inventory-waste'
+    | 'supplier-purchases',
   filters: T,
   format: ReportExportFormat,
   filename: string,

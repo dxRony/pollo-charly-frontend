@@ -1,1 +1,6 @@
-export { DashboardNavBar, type DashboardTab } from './DashboardNavBar'
+export {
+  DashboardNavBar,
+  type DashboardNavGroup,
+  type DashboardNavLink,
+  type DashboardTab,
+} from './DashboardNavBar'
