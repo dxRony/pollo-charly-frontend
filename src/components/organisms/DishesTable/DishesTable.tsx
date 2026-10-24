@@ -77,13 +77,15 @@ export function DishesTable({ dishes, onEdit, onToggleStatus, onViewImage }: Dis
                   {dish.is_active ? 'Activo' : 'Inactivo'}
                 </Badge>
               </td>
-              <td className={styles.actions}>
-                <Button type="button" size="sm" onClick={() => onEdit(dish)}>
-                  Editar
-                </Button>
-                <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(dish)}>
-                  {dish.is_active ? 'Desactivar' : 'Activar'}
-                </Button>
+              <td>
+                <div className={styles.actions}>
+                  <Button type="button" size="sm" onClick={() => onEdit(dish)}>
+                    Editar
+                  </Button>
+                  <Button type="button" size="sm" variant="primary" onClick={() => onToggleStatus(dish)}>
+                    {dish.is_active ? 'Desactivar' : 'Activar'}
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}
