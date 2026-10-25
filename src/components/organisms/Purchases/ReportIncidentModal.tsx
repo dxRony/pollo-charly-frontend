@@ -108,7 +108,7 @@ export function ReportIncidentModal({ order, onClose, onReport }: ReportIncident
         <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', padding: '0.75rem', borderRadius: '0.375rem', fontSize: '0.875rem' }}>
           <p><strong>Orden:</strong> {order.code}</p>
           <p><strong>Proveedor:</strong> {order.supplier_name ?? `ID #${order.supplier_id}`}</p>
-          <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
+          <p><strong>Total:</strong> Q{order.total.toFixed(2)}</p>
         </div>
 
         <div className={styles.section}>

@@ -158,8 +158,8 @@ export function ApproveRequestModal({
                   <th>Insumo</th>
                   <th>Sugerido</th>
                   <th>Aprobar Cantidad</th>
-                  <th>Precio Unit. ($)</th>
-                  <th>Subtotal ($)</th>
+                  <th>Precio Unit. (Q)</th>
+                  <th>Subtotal (Q)</th>
                 </tr>
               </thead>
               <tbody>
@@ -195,7 +195,7 @@ export function ApproveRequestModal({
                           required
                         />
                       </td>
-                      <td>${subtotal.toFixed(2)}</td>
+                      <td>Q{subtotal.toFixed(2)}</td>
                     </tr>
                   )
                 })}
@@ -206,7 +206,7 @@ export function ApproveRequestModal({
 
         <div className={styles.totalRow}>
           <span>Total de la Orden de Compra:</span>
-          <span className={styles.totalAmount}>${totalCalculated.toFixed(2)}</span>
+          <span className={styles.totalAmount}>Q{totalCalculated.toFixed(2)}</span>
         </div>
 
         <div className={styles.actions}>

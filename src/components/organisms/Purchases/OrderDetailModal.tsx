@@ -70,8 +70,8 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
                   <th>Insumo</th>
                   <th>Cant. Pedida</th>
                   <th>Cant. Recibida</th>
-                  <th>Precio Unit. ($)</th>
-                  <th>Subtotal ($)</th>
+                  <th>Precio Unit. (Q)</th>
+                  <th>Subtotal (Q)</th>
                 </tr>
               </thead>
               <tbody>
@@ -80,8 +80,8 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
                     <td><strong>{item.supply_name ?? `Insumo #${item.supply_id}`}</strong></td>
                     <td>{item.ordered_quantity} {item.measurement_unit ?? ''}</td>
                     <td>{item.received_quantity !== null ? `${item.received_quantity} ${item.measurement_unit ?? ''}` : 'Pendiente'}</td>
-                    <td>${item.unit_price.toFixed(2)}</td>
-                    <td>${item.subtotal.toFixed(2)}</td>
+                    <td>Q{item.unit_price.toFixed(2)}</td>
+                    <td>Q{item.subtotal.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -115,7 +115,7 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
 
         <div className={styles.totalRow}>
           <span>Total de la Orden:</span>
-          <span className={styles.totalAmount}>${order.total.toFixed(2)}</span>
+          <span className={styles.totalAmount}>Q{order.total.toFixed(2)}</span>
         </div>
 
         <div className={styles.actions}>
