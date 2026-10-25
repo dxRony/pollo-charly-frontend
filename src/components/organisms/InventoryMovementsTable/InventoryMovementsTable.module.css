@@ -8,8 +8,6 @@
 
 .table {
   width: 100%;
-  min-width: 1120px;
-  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
 }
@@ -31,59 +29,15 @@
   text-overflow: ellipsis;
 }
 
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 12%;
-}
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 12%;
-}
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-  width: 7%;
-}
-
-.table th:nth-child(4),
-.table td:nth-child(4) {
-  width: 7%;
-}
-
-.table th:nth-child(5),
-.table td:nth-child(5) {
-  width: 11%;
-}
-
-.table th:nth-child(6),
-.table td:nth-child(6) {
-  width: 12%;
-}
-
-.table th:nth-child(7),
-.table td:nth-child(7) {
-  width: 15%;
-}
-
-.table th:nth-child(8),
-.table td:nth-child(8) {
-  width: 9%;
-}
-
-.table th:nth-child(9),
-.table td:nth-child(9) {
-  width: 16%;
-}
-
 .table tr:last-child td {
   border-bottom: none;
 }
 
-.reasonCell {
-  width: 17%;
+.table td.reasonCell {
+  min-width: 12rem;
   max-width: 220px;
   white-space: normal;
+  overflow: visible;
   overflow-wrap: anywhere;
   word-break: break-word;
   color: var(--color-text-muted);
