@@ -173,8 +173,8 @@ export function ManualPurchaseModal({
                 <tr>
                   <th>Insumo</th>
                   <th>Cantidad</th>
-                  <th>Precio Unit. ($)</th>
-                  <th>Subtotal ($)</th>
+                  <th>Precio Unit. (Q)</th>
+                  <th>Subtotal (Q)</th>
                   <th></th>
                 </tr>
               </thead>
@@ -219,7 +219,7 @@ export function ManualPurchaseModal({
                           required
                         />
                       </td>
-                      <td>${subtotal.toFixed(2)}</td>
+                      <td>Q{subtotal.toFixed(2)}</td>
                       <td>
                         {items.length > 1 && (
                           <button
@@ -249,7 +249,7 @@ export function ManualPurchaseModal({
 
         <div className={styles.totalRow}>
           <span>Total de la Compra:</span>
-          <span className={styles.totalAmount}>${totalCalculated.toFixed(2)}</span>
+          <span className={styles.totalAmount}>Q{totalCalculated.toFixed(2)}</span>
         </div>
 
         <div className={styles.actions}>

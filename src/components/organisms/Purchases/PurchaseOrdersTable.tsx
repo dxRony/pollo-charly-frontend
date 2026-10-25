@@ -47,7 +47,7 @@ export function PurchaseOrdersTable({
             <th>Código</th>
             <th>Fecha Emisión</th>
             <th>Proveedor</th>
-            <th>Total ($)</th>
+            <th>Total (Q)</th>
             <th>Estado</th>
             <th>Prevista / Recibida</th>
             <th>Acciones</th>
@@ -68,7 +68,7 @@ export function PurchaseOrdersTable({
                   <strong>{order.supplier_name ?? `ID #${order.supplier_id}`}</strong>
                 </td>
                 <td>
-                  <strong style={{ color: '#ea580c' }}>${order.total.toFixed(2)}</strong>
+                  <strong style={{ color: '#ea580c' }}>Q{order.total.toFixed(2)}</strong>
                 </td>
                 <td>
                   <Badge tone={getOrderStatusTone(order.status)}>

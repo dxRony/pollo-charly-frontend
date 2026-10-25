@@ -8,8 +8,6 @@
 
 .table {
   width: 100%;
-  min-width: 1000px;
-  table-layout: fixed;
   border-collapse: collapse;
   text-align: left;
 }
@@ -35,9 +33,10 @@
   border-bottom: none;
 }
 
-.itemsCell {
+.table td.itemsCell {
   max-width: 260px;
   white-space: normal;
+  overflow: visible;
   color: var(--color-text-muted);
 }
 

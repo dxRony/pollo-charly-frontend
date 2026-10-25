@@ -61,7 +61,7 @@ export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiv
 
         <div style={{ background: '#f3f4f6', padding: '0.75rem', borderRadius: '0.375rem', fontSize: '0.875rem' }}>
           <p><strong>Proveedor:</strong> {order.supplier_name ?? `ID #${order.supplier_id}`}</p>
-          <p><strong>Total:</strong> ${order.total.toFixed(2)}</p>
+          <p><strong>Total:</strong> Q{order.total.toFixed(2)}</p>
           <p><strong>Ítems a recibir:</strong> {order.items?.length ?? 0} insumos</p>
         </div>
 
@@ -83,8 +83,8 @@ export function ConfirmReceiveModal({ order, onClose, onConfirm }: ConfirmReceiv
                     <tr key={item.id}>
                       <td><strong>{item.supply_name ?? `Insumo #${item.supply_id}`}</strong></td>
                       <td>{item.ordered_quantity} {item.measurement_unit ?? ''}</td>
-                      <td>${item.unit_price.toFixed(2)}</td>
-                      <td>${item.subtotal.toFixed(2)}</td>
+                      <td>Q{item.unit_price.toFixed(2)}</td>
+                      <td>Q{item.subtotal.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
