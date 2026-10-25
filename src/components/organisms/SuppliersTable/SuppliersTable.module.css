@@ -110,7 +110,8 @@
   display: flex;
   gap: 0.4rem;
   align-items: center;
-  white-space: nowrap;
+  flex-wrap: wrap;
+  min-width: 15rem;
 }
 
 .empty {
