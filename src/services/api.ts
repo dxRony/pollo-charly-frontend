@@ -1,5 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL
 const TOKEN_STORAGE_KEY = 'pollo_charly_token'
+const SESSION_EXPIRED_STORAGE_KEY = 'pollo_charly_session_expired'
+
+export const SESSION_EXPIRED_EVENT = 'pollo-charly:session-expired'
+export const SESSION_EXPIRED_MESSAGE = 'Tu sesión expiró. Inicia sesión de nuevo para continuar.'
 
 export interface InsufficientSupplyDetail {
   supply_id: number
@@ -41,6 +45,28 @@ export function clearToken(): void {
   localStorage.removeItem(TOKEN_STORAGE_KEY)
 }
 
+/** Devuelve (y olvida) el aviso de sesión vencida que debe mostrar la pantalla de inicio de sesión. */
+export function consumeSessionExpiredNotice(): string | null {
+  const expired = sessionStorage.getItem(SESSION_EXPIRED_STORAGE_KEY) !== null
+  sessionStorage.removeItem(SESSION_EXPIRED_STORAGE_KEY)
+
+  return expired ? SESSION_EXPIRED_MESSAGE : null
+}
+
+/**
+ * Un 401 con token significa que la sesión venció o fue revocada: se descarta el token y se avisa a la
+ * aplicación para que vuelva al inicio de sesión en lugar de mostrar errores sueltos en cada pantalla.
+ */
+function handleUnauthorized(response: Response, hadToken: boolean): void {
+  if (response.status !== 401 || !hadToken) {
+    return
+  }
+
+  clearToken()
+  sessionStorage.setItem(SESSION_EXPIRED_STORAGE_KEY, '1')
+  window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT))
+}
+
 export async function apiDownload(path: string, filename: string): Promise<void> {
   const token = getToken()
 
@@ -52,6 +78,7 @@ export async function apiDownload(path: string, filename: string): Promise<void>
   })
 
   if (!response.ok) {
+    handleUnauthorized(response, Boolean(token))
     const body: unknown = await response.json().catch(() => null)
     const message =
       body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
@@ -88,6 +115,8 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
   const body: unknown = await response.json().catch(() => null)
 
   if (!response.ok) {
+    handleUnauthorized(response, Boolean(token))
+
     const message =
       body && typeof body === 'object' && 'message' in body && typeof body.message === 'string'
         ? body.message
