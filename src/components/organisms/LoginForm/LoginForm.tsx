@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/atoms/Button'
 import { FormField } from '@/components/molecules/FormField'
 import { PasswordField } from '@/components/molecules/PasswordField'
+import { consumeSessionExpiredNotice } from '@/services/api'
 import styles from './LoginForm.module.css'
 
 interface LoginFormProps {
@@ -12,7 +13,7 @@ interface LoginFormProps {
 export function LoginForm({ onSubmit }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(consumeSessionExpiredNotice)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
