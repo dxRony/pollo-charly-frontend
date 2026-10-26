@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import * as authService from '@/services/authService'
-import { getToken } from '@/services/api'
+import { SESSION_EXPIRED_EVENT, getToken } from '@/services/api'
 import type { User } from '@/types/auth'
 import { AuthContext, type LoginResult } from './AuthContext'
 
@@ -18,6 +18,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then(setUser)
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false))
+  }, [])
+
+  useEffect(() => {
+    const handleSessionExpired = () => setUser(null)
+
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired)
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired)
   }, [])
 
   async function login(email: string, password: string): Promise<LoginResult> {
@@ -57,8 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logout() {
-    await authService.logout()
-    setUser(null)
+    try {
+      await authService.logout()
+    } finally {
+      setUser(null)
+    }
   }
 
   return (
